@@ -3,6 +3,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { PanelLeftOpen, PanelLeftClose } from "lucide-react";
+import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 
 interface EditorNavbarProps {
   isSidebarOpen: boolean;
@@ -18,7 +19,7 @@ export function EditorNavbar({ isSidebarOpen, onToggleSidebar }: EditorNavbarPro
           variant="ghost"
           size="icon"
           onClick={onToggleSidebar}
-          className="text-text-secondary hover:text-text-primary hover:bg-bg-subtle/50 h-9 w-9 rounded-lg"
+          className="text-text-secondary hover:text-text-primary hover:bg-subtle/50 h-9 w-9 rounded-lg"
           aria-label={isSidebarOpen ? "Close projects sidebar" : "Open projects sidebar"}
         >
           {isSidebarOpen ? (
@@ -40,8 +41,24 @@ export function EditorNavbar({ isSidebarOpen, onToggleSidebar }: EditorNavbarPro
         <span className="text-sm font-medium text-text-secondary">Workspace</span>
       </div>
 
-      {/* Right section: Empty for now */}
-      <div className="flex items-center gap-4" />
+      {/* Right section: Auth controls */}
+      <div className="flex items-center gap-3">
+        <Show when="signed-out">
+          <SignInButton mode="modal">
+            <Button variant="ghost" className="text-text-secondary hover:text-text-primary hover:bg-subtle/50 text-sm font-medium">
+              Sign In
+            </Button>
+          </SignInButton>
+          <SignUpButton mode="modal">
+            <Button className="bg-accent-primary text-bg-base hover:bg-accent-primary/85 text-sm font-semibold px-4 py-2 rounded-xl">
+              Sign Up
+            </Button>
+          </SignUpButton>
+        </Show>
+        <Show when="signed-in">
+          <UserButton />
+        </Show>
+      </div>
     </header>
   );
 }
