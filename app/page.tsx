@@ -30,32 +30,25 @@ import {
   CheckCircle,
   FileText
 } from "lucide-react";
+import { EditorNavbar } from "@/components/editor/editor-navbar";
+import { ProjectSidebar } from "@/components/editor/project-sidebar";
 
 export default function Home() {
   const [openDialog, setOpenDialog] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen flex-col bg-base text-primary font-sans antialiased">
-      {/* Header */}
-      <header className="flex h-16 items-center justify-between border-b border-default bg-surface px-6">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-ai text-text-primary font-bold">
-            G
-          </div>
-          <span className="text-lg font-bold tracking-tight text-text-primary">Ghost AI</span>
-          <span className="rounded-full bg-accent-primary-dim px-2.5 py-0.5 text-xs font-semibold text-accent-primary">
-            Design System V1
-          </span>
-        </div>
-        <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" className="border-default text-text-secondary hover:bg-bg-subtle">
-            Documentation
-          </Button>
-          <Button size="sm" className="bg-accent-primary text-bg-base hover:bg-accent-primary/90 font-medium">
-            Launch Canvas
-          </Button>
-        </div>
-      </header>
+      {/* Editor Layout Navigation & Sidebar */}
+      <EditorNavbar
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)}
+      />
+      <ProjectSidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
+
 
       {/* Main Grid Area */}
       <main className="flex-1 p-8 md:p-12 max-w-6xl mx-auto w-full space-y-8">
