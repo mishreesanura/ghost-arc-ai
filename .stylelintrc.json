@@ -1,0 +1,36 @@
+{
+  "rules": {
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "tailwind",
+          "apply",
+          "layer",
+          "config",
+          "theme",
+          "source",
+          "plugin",
+          "utility",
+          "custom-variant"
+        ]
+      }
+    ],
+    "scss/at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "tailwind",
+          "apply",
+          "layer",
+          "config",
+          "theme",
+          "source",
+          "plugin",
+          "utility",
+          "custom-variant"
+        ]
+      }
+    ]
+  }
+}

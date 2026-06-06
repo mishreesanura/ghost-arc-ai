@@ -19,7 +19,7 @@ export function EditorNavbar({ isSidebarOpen, onToggleSidebar }: EditorNavbarPro
           variant="ghost"
           size="icon"
           onClick={onToggleSidebar}
-          className="text-text-secondary hover:text-text-primary hover:bg-bg-subtle/50 h-9 w-9 rounded-lg"
+          className="text-text-secondary hover:text-text-primary hover:bg-subtle/50 h-9 w-9 rounded-lg"
           aria-label={isSidebarOpen ? "Close projects sidebar" : "Open projects sidebar"}
         >
           {isSidebarOpen ? (
@@ -45,7 +45,7 @@ export function EditorNavbar({ isSidebarOpen, onToggleSidebar }: EditorNavbarPro
       <div className="flex items-center gap-3">
         <Show when="signed-out">
           <SignInButton mode="modal">
-            <Button variant="ghost" className="text-text-secondary hover:text-text-primary hover:bg-bg-subtle/50 text-sm font-medium">
+            <Button variant="ghost" className="text-text-secondary hover:text-text-primary hover:bg-subtle/50 text-sm font-medium">
               Sign In
             </Button>
           </SignInButton>

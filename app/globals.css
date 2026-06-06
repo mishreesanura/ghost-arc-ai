@@ -4,55 +4,55 @@
 @import "@clerk/ui/themes/shadcn.css";
 
 @theme inline {
-    --color-bg-base: var(--bg-base);
-    --color-bg-surface: var(--bg-surface);
-    --color-bg-elevated: var(--bg-elevated);
-    --color-bg-subtle: var(--bg-subtle);
+    --color-base: #080809;
+    --color-surface: #111114;
+    --color-elevated: #18181c;
+    --color-subtle: #1e1e23;
     
-    --color-border-default: var(--border-default);
-    --color-border-subtle: var(--border-subtle);
+    --color-border-default: #2a2a30;
+    --color-border-subtle: #3a3a42;
     
-    --color-text-primary: var(--text-primary);
-    --color-text-secondary: var(--text-secondary);
-    --color-text-muted: var(--text-muted);
-    --color-text-faint: var(--text-faint);
+    --color-text-primary: #f0f0f4;
+    --color-text-secondary: #c0c0cc;
+    --color-text-muted: #808090;
+    --color-text-faint: #505060;
     
-    --color-accent-primary: var(--accent-primary);
-    --color-accent-primary-dim: var(--accent-primary-dim);
-    --color-accent-ai: var(--accent-ai);
-    --color-accent-ai-text: var(--accent-ai-text);
+    --color-accent-primary: #00c8d4;
+    --color-accent-primary-dim: rgba(0, 200, 212, 0.12);
+    --color-accent-ai: #6457f9;
+    --color-accent-ai-text: #8b82ff;
     
-    --color-state-error: var(--state-error);
-    --color-state-success: var(--state-success);
-    --color-state-warning: var(--state-warning);
+    --color-state-error: #ff4d4f;
+    --color-state-success: #34d399;
+    --color-state-warning: #fbbf24;
 
     /* Additional UI context variables */
-    --color-text-copy-primary: var(--text-primary);
-    --color-text-copy-muted: var(--text-muted);
-    --color-border-surface-border: var(--border-default);
-    --color-text-brand: var(--accent-primary);
-    --color-bg-accent-dim: var(--accent-primary-dim);
+    --color-text-copy-primary: #f0f0f4;
+    --color-text-copy-muted: #808090;
+    --color-border-surface-border: #2a2a30;
+    --color-text-brand: #00c8d4;
+    --color-bg-accent-dim: rgba(0, 200, 212, 0.12);
 
     /* shadcn mappings */
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
-    --color-popover: var(--popover);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-destructive: var(--destructive);
-    --color-destructive-foreground: var(--destructive-foreground);
-    --color-border: var(--border);
-    --color-input: var(--input);
-    --color-ring: var(--ring);
+    --color-background: #080809;
+    --color-foreground: #f0f0f4;
+    --color-card: #111114;
+    --color-card-foreground: #f0f0f4;
+    --color-popover: #111114;
+    --color-popover-foreground: #f0f0f4;
+    --color-primary: #00c8d4;
+    --color-primary-foreground: #080809;
+    --color-secondary: #1e1e23;
+    --color-secondary-foreground: #f0f0f4;
+    --color-muted: #1e1e23;
+    --color-muted-foreground: #808090;
+    --color-accent: rgba(0, 200, 212, 0.12);
+    --color-accent-foreground: #00c8d4;
+    --color-destructive: #ff4d4f;
+    --color-destructive-foreground: #f0f0f4;
+    --color-border: #2a2a30;
+    --color-input: #3a3a42;
+    --color-ring: #00c8d4;
 
     /* Radius scale from context/ui-context.md */
     --radius-xl: 0.75rem;
