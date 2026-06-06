@@ -136,8 +136,8 @@ export default function Home() {
                         </DialogHeader>
                         <div className="space-y-4 py-2">
                           <div className="space-y-2">
-                            <label className="text-xs font-mono text-text-muted">Prompt Input</label>
-                            <Input className="bg-bg-base border-default text-text-primary placeholder:text-text-faint focus-visible:ring-accent-primary" placeholder="Define monolithic e-commerce cluster..." />
+                            <label htmlFor="prompt-input" className="text-xs font-mono text-text-muted">Prompt Input</label>
+                            <Input id="prompt-input" className="bg-bg-base border-default text-text-primary placeholder:text-text-faint focus-visible:ring-accent-primary" placeholder="Define monolithic e-commerce cluster..." />
                           </div>
                           <div className="p-3 bg-bg-base rounded-lg border border-default font-mono text-xs text-accent-ai-text">
                             $ ghost-ai --generate --target canvas_v1
@@ -170,10 +170,12 @@ export default function Home() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Input className="bg-bg-base border-default text-text-primary placeholder:text-text-faint focus-visible:ring-accent-primary" placeholder="Enter service endpoint url..." />
+                    <label htmlFor="endpoint-url" className="sr-only">Service Endpoint URL</label>
+                    <Input id="endpoint-url" className="bg-bg-base border-default text-text-primary placeholder:text-text-faint focus-visible:ring-accent-primary" placeholder="Enter service endpoint url..." />
                   </div>
                   <div className="space-y-2">
-                    <Textarea className="bg-bg-base border-default text-text-primary placeholder:text-text-faint focus-visible:ring-accent-primary min-h-[80px]" placeholder="Optional description nodes..." />
+                    <label htmlFor="description-nodes" className="sr-only">Description Nodes</label>
+                    <Textarea id="description-nodes" className="bg-bg-base border-default text-text-primary placeholder:text-text-faint focus-visible:ring-accent-primary min-h-[80px]" placeholder="Optional description nodes..." />
                   </div>
                   
                   <div className="space-y-2">

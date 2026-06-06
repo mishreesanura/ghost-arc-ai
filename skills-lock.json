@@ -5,7 +5,7 @@
       "source": "clerk/skills",
       "sourceType": "github",
       "skillPath": "skills/core/clerk/SKILL.md",
-      "computedHash": "9a7ea0a999381471bb8f783260b295360a2a937d61c9d1c3163cede96b39c229"
+      "computedHash": "95c7fde6f89f7849ab8288f85e56a2e3c3d012b02656182e3b6185886db68d31"
     },
     "clerk-cli": {
       "source": "clerk/skills",

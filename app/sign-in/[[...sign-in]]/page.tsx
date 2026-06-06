@@ -1,5 +1,6 @@
 import { SignIn } from "@clerk/nextjs";
 import { History, Share2, FileText } from "lucide-react";
+import { signInUrl, signUpUrl } from "../../../proxy";
 
 export default function SignInPage() {
   return (
@@ -73,7 +74,7 @@ export default function SignInPage() {
       {/* Right panel: Centered Clerk form */}
       <div className="flex w-full md:w-1/2 flex-col justify-center items-center p-8 bg-base relative">
         <div className="w-full max-w-md flex justify-center z-10">
-          <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
+          <SignIn path={signInUrl} routing="path" signUpUrl={signUpUrl} />
         </div>
       </div>
     </div>
