@@ -45,3 +45,5 @@ next-env.d.ts
 
 # agent files
 /.agents/
+
+/app/generated/prisma

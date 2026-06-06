@@ -4,11 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Phase 1: Design System & Foundation UI Components
+- Phase 2: Database Setup & Prisma Integration
 
 ## Current Goal
 
-- Implement project dialogs and empty state layout on `/editor`.
+- Configure real persistence by wiring database models and the Prisma client into route handlers.
 
 ## Completed
 
@@ -17,6 +17,7 @@ Update this file whenever the current phase, active feature, or implementation s
 - Phase 1: Integrated Clerk authentication, configuring `ClerkProvider` with dark theme settings, route protection in `proxy.ts`, custom styled sign-in/sign-up pages, `/` page redirecting to `/editor`, and user profile/logout controls.
 - Phase 1: Redesigned the sign-in/sign-up page layout to match the requested 50/50 layout with custom icon-badges, updated tagline/headings, a copyright footer, and a premium glowing blue-cyan gradient background on the left panel. Properly configured Geist Sans and Geist Mono in Tailwind `@theme inline` within `app/globals.css` to fix the typography.
 - Phase 1: Built `/editor` home screen empty state, added project management dialogs (Create, Rename, Delete) using mock data, and wired project item actions into the sidebar using `DropdownMenu`.
+- Phase 2: Database Setup & Prisma Integration. Created split schema models (`Project` & `ProjectCollaborator`) under `prisma/models/project.prisma`. Configured `prisma.config.ts` to load environment variables from `.env.local` and `.env`. Implemented `lib/prisma.ts` cached client singleton that dynamically branches between Prisma Accelerate (for `prisma+postgres://`) and `@prisma/adapter-pg` (for standard `postgres://` connections). Ran database migrations and generated the type-safe client.
 
 ## In Progress
 
@@ -33,9 +34,10 @@ Update this file whenever the current phase, active feature, or implementation s
 ## Architecture Decisions
 
 - Created a dedicated `useProjectDialogs` hook for managing shared dialog state across the `/editor` layout without prop-drilling or duplicating dialog components.
+- Implemented dynamic branching in `lib/prisma.ts` to support both Prisma Accelerate edge acceleration and direct PostgreSQL connections with the Node-postgres driver adapter (`@prisma/adapter-pg` + `pg`), preserving global cached state in non-production environments to avoid database connection exhaustion during development hot-reloads.
 
 ## Session Notes
 
 - Design system setup is complete and verified with a clean Next.js production build.
 - Base editor layout header navigation and sidebar overlays are implemented and fully verified with Next.js Turbopack build.
-- Project management dialog state successfully scaffolded with mock data. Ready for real persistence logic later.
+- Database setup, schema mapping, and client singleton are verified, and the first migration applied successfully to the pooled database. Production builds pass without type errors.
