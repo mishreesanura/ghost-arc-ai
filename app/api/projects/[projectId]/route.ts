@@ -24,10 +24,10 @@ export async function PATCH(
     return Response.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  let body: any = {};
+  let body: { name?: string } = {};
   try {
     body = await request.json();
-  } catch (e) {
+  } catch {
     // Body is empty or malformed
   }
 

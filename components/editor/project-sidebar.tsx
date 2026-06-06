@@ -21,6 +21,7 @@ interface ProjectSidebarProps {
   onNewProject: () => void;
   onRenameProject: (project: ProjectData) => void;
   onDeleteProject: (project: ProjectData) => void;
+  activeProjectId?: string;
 }
 
 export function ProjectSidebar({ 
@@ -30,7 +31,8 @@ export function ProjectSidebar({
   sharedProjects = [],
   onNewProject,
   onRenameProject,
-  onDeleteProject
+  onDeleteProject,
+  activeProjectId
 }: ProjectSidebarProps) {
   const router = useRouter();
 
@@ -101,36 +103,48 @@ export function ProjectSidebar({
                   </p>
                 </div>
               ) : (
-                ownedProjects.map((project) => (
-                  <div key={project.id} className="group flex items-center justify-between p-3 rounded-lg hover:bg-subtle transition-colors cursor-pointer border border-transparent hover:border-default">
-                    <div 
-                      onClick={() => handleProjectClick(project.id)}
-                      className="flex-1 flex items-center gap-3 overflow-hidden"
+                ownedProjects.map((project) => {
+                  const isActive = project.id === activeProjectId;
+                  return (
+                    <div
+                      key={project.id}
+                      className={`group flex items-center justify-between p-3 rounded-lg hover:bg-subtle transition-colors cursor-pointer border ${
+                        isActive
+                          ? "bg-subtle border-default text-accent-primary font-medium"
+                          : "border-transparent hover:border-default"
+                      }`}
                     >
-                      <Folder className="h-4 w-4 text-accent-primary shrink-0" />
-                      <div className="truncate">
-                        <div className="text-sm font-medium text-text-primary truncate">{project.name}</div>
+                      <div
+                        onClick={() => handleProjectClick(project.id)}
+                        className="flex-1 flex items-center gap-3 overflow-hidden"
+                      >
+                        <Folder className="h-4 w-4 text-accent-primary shrink-0" />
+                        <div className="truncate">
+                          <div className={`text-sm truncate ${isActive ? "text-accent-primary font-semibold" : "text-text-primary font-medium"}`}>
+                            {project.name}
+                          </div>
+                        </div>
                       </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-text-muted hover:text-text-primary hover:bg-base">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48 bg-surface border-default text-text-primary">
+                          <DropdownMenuItem onClick={() => onRenameProject(project)} className="cursor-pointer hover:bg-subtle focus:bg-subtle">
+                            <Pencil className="mr-2 h-4 w-4 text-text-muted" />
+                            <span>Rename</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => onDeleteProject(project)} className="cursor-pointer text-state-error hover:bg-state-error/10 hover:text-state-error focus:bg-state-error/10 focus:text-state-error">
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            <span>Delete</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-text-muted hover:text-text-primary hover:bg-base">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-48 bg-surface border-default text-text-primary">
-                        <DropdownMenuItem onClick={() => onRenameProject(project)} className="cursor-pointer hover:bg-subtle focus:bg-subtle">
-                          <Pencil className="mr-2 h-4 w-4 text-text-muted" />
-                          <span>Rename</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => onDeleteProject(project)} className="cursor-pointer text-state-error hover:bg-state-error/10 hover:text-state-error focus:bg-state-error/10 focus:text-state-error">
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          <span>Delete</span>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                ))
+                  );
+                })
               )}
             </TabsContent>
 
@@ -148,20 +162,32 @@ export function ProjectSidebar({
                   </p>
                 </div>
               ) : (
-                sharedProjects.map((project) => (
-                  <div key={project.id} className="group flex items-center justify-between p-3 rounded-lg hover:bg-subtle transition-colors cursor-pointer border border-transparent hover:border-default">
-                    <div 
-                      onClick={() => handleProjectClick(project.id)}
-                      className="flex-1 flex items-center gap-3 overflow-hidden"
+                sharedProjects.map((project) => {
+                  const isActive = project.id === activeProjectId;
+                  return (
+                    <div
+                      key={project.id}
+                      className={`group flex items-center justify-between p-3 rounded-lg hover:bg-subtle transition-colors cursor-pointer border ${
+                        isActive
+                          ? "bg-subtle border-default text-accent-ai font-medium"
+                          : "border-transparent hover:border-default"
+                      }`}
                     >
-                      <Users className="h-4 w-4 text-accent-ai shrink-0" />
-                      <div className="truncate">
-                        <div className="text-sm font-medium text-text-primary truncate">{project.name}</div>
+                      <div
+                        onClick={() => handleProjectClick(project.id)}
+                        className="flex-1 flex items-center gap-3 overflow-hidden"
+                      >
+                        <Users className="h-4 w-4 text-accent-ai shrink-0" />
+                        <div className="truncate">
+                          <div className={`text-sm truncate ${isActive ? "text-accent-ai font-semibold" : "text-text-primary font-medium"}`}>
+                            {project.name}
+                          </div>
+                        </div>
                       </div>
+                      {/* No actions for shared projects */}
                     </div>
-                    {/* No actions for shared projects */}
-                  </div>
-                ))
+                  );
+                })
               )}
             </TabsContent>
           </Tabs>

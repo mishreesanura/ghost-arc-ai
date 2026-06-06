@@ -65,16 +65,19 @@ export function useProjectActions() {
         try {
           const errData = await res.json();
           if (errData?.error) errMsg = errData.error;
-        } catch (_) {}
+        } catch {
+          // ignore
+        }
         throw new Error(errMsg);
       }
 
       const newProject = await res.json();
       closeDialog();
       router.push(`/editor/${newProject.id}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error creating project:", err);
-      setError(`Create failed: ${err.message || err}`);
+      const message = err instanceof Error ? err.message : String(err);
+      setError(`Create failed: ${message}`);
     } finally {
       setIsLoading(false);
     }
@@ -96,15 +99,18 @@ export function useProjectActions() {
         try {
           const errData = await res.json();
           if (errData?.error) errMsg = errData.error;
-        } catch (_) {}
+        } catch {
+          // ignore
+        }
         throw new Error(errMsg);
       }
 
       closeDialog();
       router.refresh();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error renaming project:", err);
-      setError(`Rename failed: ${err.message || err}`);
+      const message = err instanceof Error ? err.message : String(err);
+      setError(`Rename failed: ${message}`);
     } finally {
       setIsLoading(false);
     }
@@ -124,7 +130,9 @@ export function useProjectActions() {
         try {
           const errData = await res.json();
           if (errData?.error) errMsg = errData.error;
-        } catch (_) {}
+        } catch {
+          // ignore
+        }
         throw new Error(errMsg);
       }
 
@@ -142,9 +150,10 @@ export function useProjectActions() {
       } else {
         router.refresh();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error deleting project:", err);
-      setError(`Delete failed: ${err.message || err}`);
+      const message = err instanceof Error ? err.message : String(err);
+      setError(`Delete failed: ${message}`);
     } finally {
       setIsLoading(false);
     }

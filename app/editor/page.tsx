@@ -3,6 +3,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { getProjectsForUser } from "@/lib/projects";
 import { EditorHomeClient } from "./editor-home-client";
+import { Project } from "@/app/generated/prisma";
 
 export default async function Page() {
   const { userId } = await auth();
@@ -17,7 +18,7 @@ export default async function Page() {
   const { owned, shared } = await getProjectsForUser(userId, emails);
 
   // Map database dates to plain JSON values to avoid serialization issues
-  const serializeProjectList = (list: any[]) =>
+  const serializeProjectList = (list: Project[]) =>
     list.map((proj) => ({
       ...proj,
       createdAt: proj.createdAt.toISOString(),

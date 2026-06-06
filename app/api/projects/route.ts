@@ -39,10 +39,10 @@ export async function POST(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: any = {};
+  let body: { name?: string; description?: string; id?: string } = {};
   try {
     body = await request.json();
-  } catch (e) {
+  } catch {
     // Body is empty or malformed
   }
 

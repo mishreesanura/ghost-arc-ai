@@ -4,11 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Phase 2: Database Setup & Prisma Integration
+- Phase 2: Database Setup, Editor Shell Wiring & Share Dialog Complete
 
 ## Current Goal
 
-- Configure real persistence by wiring database models and the Prisma client into route handlers.
+- All initial routing, workspace layouts, access controls, project management API endpoints, sidebar configurations, and real-time collaborator share controls are complete.
 
 ## Completed
 
@@ -21,6 +21,8 @@ Update this file whenever the current phase, active feature, or implementation s
 - Phase 2: Project API Routes. Implemented REST endpoints for list/create (`/api/projects`) and rename/delete (`/api/projects/[projectId]`). Secured routes via Clerk (`401 Unauthorized` for unauthenticated requests, `403 Forbidden` for non-owner mutations). Handled Next.js 16 dynamic route segment changes by awaiting `params` promise.
 - Phase 2: Editor Home Wiring. Converted the `/editor` homepage to a React Server Component (RSC). Implemented a project data helper (`lib/projects.ts`) to fetch owned and shared projects for a user server-side. Developed the `useProjectActions` hook to coordinate API mutations (create, rename, delete) and align the Project ID with the client-generated Liveblocks room ID. Updated `ProjectSidebar` and `ProjectDialogs` to consume the real database models and navigate/refresh the UI cleanly.
 - Phase 2: Refined slug generation (`lib/slug.ts`) to use Unicode property escapes for multi-language compatibility, added an optional ASCII transliteration fallback, updated the Prisma schema generator client provider to `prisma-client-js`, added project ID format and length validation in the POST route handler, and improved error handling/exact path segment matching in `useProjectActions` hooks and project dialogs.
+- Phase 2: Editor Workspace Shell. Implemented server-side access validation helpers (`lib/project-access.ts`), visual project highlighting in `ProjectSidebar`, customizable top `WorkspaceNavbar` displaying the active project name, collaborative canvas and AI assistant sidebar layout skeletons (`WorkspaceClient`), and a unified server component entry point for `/editor/[roomId]` routing with fallback `AccessDenied` rendering.
+- Phase 2: Project Share Dialog. Created backend API endpoints (`/api/projects/[projectId]/collaborators` and `/api/projects/[projectId]/collaborators/[collaboratorId]`) to support listing, inviting, and removing collaborators. Configured server-side ownership checks. Implemented the frontend `<ShareDialog />` with Clerk user details enrichment (names/avatars), read-only view for collaborators, link copying state, and integrated it into the `WorkspaceClient` navbar action.
 
 ## In Progress
 
