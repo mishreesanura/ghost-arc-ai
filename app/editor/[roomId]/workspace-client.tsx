@@ -30,6 +30,7 @@ export function WorkspaceClient({
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(false);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(false);
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [isTemplatesOpen, setIsTemplatesOpen] = useState(false);
 
   const { user } = useUser();
   const isOwner = user?.id === project.ownerId;
@@ -63,6 +64,7 @@ export function WorkspaceClient({
         isRightSidebarOpen={isRightSidebarOpen}
         onToggleRightSidebar={() => setIsRightSidebarOpen((prev) => !prev)}
         onShare={handleShare}
+        onOpenTemplates={() => setIsTemplatesOpen(true)}
       />
 
       {/* Workspace Body container */}
@@ -116,7 +118,11 @@ export function WorkspaceClient({
         {/* Central Canvas Workspace Area */}
         <main className="flex-grow bg-base relative overflow-hidden" style={{ height: "calc(100vh - 64px)", width: "100%" }}>
           <div style={{ height: "100%", width: "100%", position: "relative" }}>
-            <CollaborativeCanvasWrapper projectId={project.id} />
+            <CollaborativeCanvasWrapper
+              projectId={project.id}
+              isTemplatesOpen={isTemplatesOpen}
+              onCloseTemplates={() => setIsTemplatesOpen(false)}
+            />
           </div>
         </main>
 

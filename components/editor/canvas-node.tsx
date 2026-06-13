@@ -1,6 +1,7 @@
 import React from "react";
 import { Handle, Position, NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
 import { CanvasNode, NodeShape, NODE_COLORS } from "@/types/canvas";
+import { NodeColorToolbar } from "./node-color-toolbar";
 
 // ---------- SVG shape renderers (scale with node size) ----------
 
@@ -242,31 +243,59 @@ export function CanvasNodeComponent({ id, data, selected }: NodeProps<CanvasNode
     </div>
   );
 
+  const handleClassName = "!w-2 !h-2 !bg-white !border !border-neutral-800 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:!bg-accent-primary hover:!scale-125";
   const handles = (
     <>
+      {/* Target Handles */}
       <Handle
         type="target"
         position={Position.Top}
         id="top"
-        className="!w-2 !h-2 !bg-white !border-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        className={handleClassName}
       />
       <Handle
-        type="source"
+        type="target"
         position={Position.Right}
         id="right"
-        className="!w-2 !h-2 !bg-white !border-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        className={handleClassName}
       />
       <Handle
-        type="source"
+        type="target"
         position={Position.Bottom}
         id="bottom"
-        className="!w-2 !h-2 !bg-white !border-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        className={handleClassName}
       />
       <Handle
         type="target"
         position={Position.Left}
         id="left"
-        className="!w-2 !h-2 !bg-white !border-none opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        className={handleClassName}
+      />
+
+      {/* Source Handles */}
+      <Handle
+        type="source"
+        position={Position.Top}
+        id="top"
+        className={handleClassName}
+      />
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="right"
+        className={handleClassName}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        id="bottom"
+        className={handleClassName}
+      />
+      <Handle
+        type="source"
+        position={Position.Left}
+        id="left"
+        className={handleClassName}
       />
     </>
   );
@@ -280,6 +309,9 @@ export function CanvasNodeComponent({ id, data, selected }: NodeProps<CanvasNode
         handleClassName="!bg-elevated !border-accent-primary !rounded-sm !w-2 !h-2 !border hover:!scale-125 transition-transform duration-200"
         lineClassName="!border-accent-primary/40"
       />
+      {selected && (
+        <NodeColorToolbar nodeId={id} activeColor={fillColor} />
+      )}
       {isSvgShape ? (
         <SvgShapeWrapper shape={shape} fill={fillColor} selected={!!selected}>
           {contentElement}

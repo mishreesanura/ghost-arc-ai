@@ -67,9 +67,13 @@ function LiveblocksConnectionMonitor({
 function LiveblocksWithTimeout({
   projectId,
   onTimeout,
+  isTemplatesOpen,
+  onCloseTemplates,
 }: {
   projectId: string;
   onTimeout: () => void;
+  isTemplatesOpen: boolean;
+  onCloseTemplates: () => void;
 }) {
   return (
     <LiveblocksProvider authEndpoint="/api/liveblocks-auth">
@@ -82,7 +86,7 @@ function LiveblocksWithTimeout({
       >
         <LiveblocksConnectionMonitor onTimeout={onTimeout}>
           <ReactFlowProvider>
-            <LiveblocksCanvas />
+            <LiveblocksCanvas isTemplatesOpen={isTemplatesOpen} onCloseTemplates={onCloseTemplates} />
           </ReactFlowProvider>
         </LiveblocksConnectionMonitor>
       </RoomProvider>
@@ -94,9 +98,15 @@ function LiveblocksWithTimeout({
 
 interface CollaborativeCanvasWrapperProps {
   projectId: string;
+  isTemplatesOpen: boolean;
+  onCloseTemplates: () => void;
 }
 
-export function CollaborativeCanvasWrapper({ projectId }: CollaborativeCanvasWrapperProps) {
+export function CollaborativeCanvasWrapper({
+  projectId,
+  isTemplatesOpen,
+  onCloseTemplates,
+}: CollaborativeCanvasWrapperProps) {
   const [useLocal, setUseLocal] = useState(false);
 
   const handleLiveblocksError = React.useCallback(() => {
@@ -108,7 +118,7 @@ export function CollaborativeCanvasWrapper({ projectId }: CollaborativeCanvasWra
   if (useLocal) {
     return (
       <ReactFlowProvider>
-        <LocalCanvas />
+        <LocalCanvas isTemplatesOpen={isTemplatesOpen} onCloseTemplates={onCloseTemplates} />
       </ReactFlowProvider>
     );
   }
@@ -119,13 +129,15 @@ export function CollaborativeCanvasWrapper({ projectId }: CollaborativeCanvasWra
       onError={handleLiveblocksError}
       fallback={
         <ReactFlowProvider>
-          <LocalCanvas />
+          <LocalCanvas isTemplatesOpen={isTemplatesOpen} onCloseTemplates={onCloseTemplates} />
         </ReactFlowProvider>
       }
     >
       <LiveblocksWithTimeout
         projectId={projectId}
         onTimeout={handleLiveblocksError}
+        isTemplatesOpen={isTemplatesOpen}
+        onCloseTemplates={onCloseTemplates}
       />
     </LiveblocksErrorBoundary>
   );
