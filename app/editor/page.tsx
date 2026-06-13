@@ -1,18 +1,15 @@
 import React from "react";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { getClerkUserIdentity } from "@/lib/project-access";
 import { redirect } from "next/navigation";
 import { getProjectsForUser } from "@/lib/projects";
 import { EditorHomeClient } from "./editor-home-client";
 import { Project } from "@/app/generated/prisma";
 
 export default async function Page() {
-  const { userId } = await auth();
+  const { userId, emails } = await getClerkUserIdentity();
   if (!userId) {
     redirect("/sign-in");
   }
-
-  const user = await currentUser();
-  const emails = user?.emailAddresses.map((e) => e.emailAddress) || [];
 
   // Fetch owned and shared projects server-side
   const { owned, shared } = await getProjectsForUser(userId, emails);
