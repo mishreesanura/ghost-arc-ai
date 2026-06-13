@@ -1,7 +1,14 @@
 import { Liveblocks } from "@liveblocks/node";
 
-if (!process.env.LIVEBLOCKS_SECRET_KEY) {
-  console.warn("WARNING: LIVEBLOCKS_SECRET_KEY is not defined in environment variables. Falling back to dummy key.");
+const secretKey = process.env.LIVEBLOCKS_SECRET_KEY;
+const isProduction = process.env.NODE_ENV === "production";
+
+if (!secretKey) {
+  if (isProduction) {
+    throw new Error("LIVEBLOCKS_SECRET_KEY is required in production environments.");
+  } else {
+    console.warn("WARNING: LIVEBLOCKS_SECRET_KEY is not defined in environment variables. Falling back to dummy key.");
+  }
 }
 
 const globalForLiveblocks = globalThis as unknown as {
@@ -11,7 +18,7 @@ const globalForLiveblocks = globalThis as unknown as {
 export const liveblocks =
   globalForLiveblocks.liveblocks ??
   new Liveblocks({
-    secret: process.env.LIVEBLOCKS_SECRET_KEY || "sk_test_placeholder_key_for_development",
+    secret: secretKey || "sk_test_placeholder_key_for_development",
   });
 
 if (process.env.NODE_ENV !== "production") {

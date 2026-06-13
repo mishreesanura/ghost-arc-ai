@@ -19,7 +19,7 @@ export async function getClerkUserIdentity(): Promise<ClerkUserIdentity> {
     // Ignore
   }
 
-  if (!userId && process.env.NODE_ENV === 'development') {
+  if (!userId && process.env.NODE_ENV === 'development' && process.env.ENABLE_MOCK_AUTH === 'true') {
     return {
       userId: "user_mock",
       primaryEmail: "mock_user@example.com",
@@ -45,7 +45,7 @@ export async function checkProjectAccess(
   userId: string,
   emails: string[]
 ): Promise<boolean> {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' && process.env.ENABLE_MOCK_AUTH === 'true') {
     return true;
   }
   const project = await prisma.project.findUnique({

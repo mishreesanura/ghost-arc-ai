@@ -18,9 +18,18 @@ export async function POST(request: Request) {
     // Malformed request body
   }
 
-  const roomId = body.room;
-  if (!roomId) {
-    return Response.json({ error: "Room ID (project ID) is required" }, { status: 400 });
+  const room = body.room;
+  if (typeof room !== "string") {
+    return Response.json({ error: "Room ID (project ID) must be a string" }, { status: 400 });
+  }
+
+  const roomId = room.trim();
+  const idPattern = /^[A-Za-z0-9-]+$/;
+  if (roomId === "" || !idPattern.test(roomId) || roomId.length > 50) {
+    return Response.json(
+      { error: "Invalid Room ID (project ID). Must contain only letters, numbers, and hyphens, and be up to 50 characters long." },
+      { status: 400 }
+    );
   }
 
   // 3. Retrieve project metadata to confirm existence

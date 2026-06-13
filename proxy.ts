@@ -21,7 +21,7 @@ export default clerkMiddleware(async (auth, req) => {
     }
   }
 
-  if (process.env.NODE_ENV === 'development' && isMockAuth) {
+  if (process.env.NODE_ENV === 'development' && isMockAuth && process.env.ENABLE_MOCK_AUTH === 'true') {
     return;
   }
 
