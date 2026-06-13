@@ -9,6 +9,7 @@ import { ProjectDialogs } from "@/components/editor/project-dialogs";
 import { useProjectActions, ProjectData } from "@/hooks/use-project-actions";
 import { useUser } from "@clerk/nextjs";
 import { ShareDialog } from "@/components/editor/share-dialog";
+import { CollaborativeCanvasWrapper } from "@/components/editor/collaborative-canvas-wrapper";
 
 interface WorkspaceClientProps {
   project: {
@@ -113,21 +114,9 @@ export function WorkspaceClient({
         />
 
         {/* Central Canvas Workspace Area */}
-        <main className="flex-1 flex flex-col items-center justify-center p-8 bg-base relative overflow-hidden">
-          {/* Grid visual styling background pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f1f2e1a_1px,transparent_1px),linear-gradient(to_bottom,#1f1f2e1a_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
-          
-          <div className="flex flex-col items-center justify-center text-center space-y-6 max-w-md z-10">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-accent-primary-dim text-accent-primary border border-accent-primary/20 shadow-[0_0_20px_rgba(0,200,212,0.1)]">
-              <Network className="h-8 w-8 animate-pulse" strokeWidth={1.5} />
-            </div>
-            
-            <div className="space-y-2">
-              <h2 className="text-xl font-bold tracking-tight text-text-primary">Interactive Canvas Area</h2>
-              <p className="text-text-muted text-sm max-w-sm leading-relaxed">
-                This area will house the collaborative React Flow canvas, allowing nodes, relationships, and AI design generation.
-              </p>
-            </div>
+        <main className="flex-grow bg-base relative overflow-hidden" style={{ height: "calc(100vh - 64px)", width: "100%" }}>
+          <div style={{ height: "100%", width: "100%", position: "relative" }}>
+            <CollaborativeCanvasWrapper projectId={project.id} />
           </div>
         </main>
 
