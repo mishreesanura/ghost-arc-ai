@@ -18,9 +18,13 @@ import {
   MarkerType,
 } from "@xyflow/react";
 import { CanvasNodeComponent } from "./canvas-node";
+import { CanvasEdgeComponent } from "./canvas-edge";
 import { ShapePanel } from "./shape-panel";
 import { CanvasNode, CanvasEdge } from "@/types/canvas";
 import { useLiveblocksFlow, Cursors } from "@liveblocks/react-flow";
+import { useUndo, useRedo, useCanUndo, useCanRedo } from "@liveblocks/react";
+import { CanvasControls } from "./canvas-controls";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 
 // ---------- shared drag-and-drop logic ----------
 
@@ -96,17 +100,21 @@ interface CanvasSurfaceProps {
   onDrop: (e: React.DragEvent<HTMLDivElement>) => void;
   isLoading?: boolean;
   children?: React.ReactNode;
+  undo?: () => void;
+  redo?: () => void;
+  canUndo?: boolean;
+  canRedo?: boolean;
 }
 
 const defaultEdgeOptions = {
-  type: "smoothstep",
+  type: "canvasEdge",
   style: {
-    stroke: "#f8fafc",
-    strokeWidth: 1.5,
+    stroke: "#6b7280",
+    strokeWidth: 2,
   },
   markerEnd: {
     type: MarkerType.ArrowClosed,
-    color: "#f8fafc",
+    color: "#6b7280",
   },
 };
 
@@ -121,10 +129,21 @@ function CanvasSurface({
   onDrop,
   isLoading,
   children,
+  undo,
+  redo,
+  canUndo,
+  canRedo,
 }: CanvasSurfaceProps) {
   const nodeTypes = React.useMemo(
     () => ({
       canvasNode: CanvasNodeComponent,
+    }),
+    []
+  );
+
+  const edgeTypes = React.useMemo(
+    () => ({
+      canvasEdge: CanvasEdgeComponent,
     }),
     []
   );
@@ -150,6 +169,7 @@ function CanvasSurface({
         onConnect={onConnect}
         onDelete={onDelete}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         connectionMode={ConnectionMode.Loose}
         onDragOver={onDragOver}
         onDrop={onDrop}
@@ -170,6 +190,14 @@ function CanvasSurface({
           maskColor="rgba(8, 8, 9, 0.7)"
           aria-label="Canvas Minimap"
         />
+        <Panel position="bottom-left" className="!mb-6 !ml-6">
+          <CanvasControls
+            onUndo={undo}
+            onRedo={redo}
+            canUndo={canUndo}
+            canRedo={canRedo}
+          />
+        </Panel>
         <Panel position="bottom-center" className="!mb-6">
           <ShapePanel />
         </Panel>
@@ -178,13 +206,24 @@ function CanvasSurface({
   );
 }
 
+import { StarterTemplatesModal } from "./starter-templates-modal";
+import { CanvasTemplate } from "./starter-templates";
+
 // ---------- local-only canvas (no Liveblocks) ----------
 
-export function LocalCanvas() {
-  const [nodes, , onNodesChange] = useNodesState<CanvasNode>([]);
-  const [edges, , onEdgesChange] = useEdgesState<CanvasEdge>([]);
-  const { screenToFlowPosition } = useReactFlow();
+interface CanvasProps {
+  isTemplatesOpen: boolean;
+  onCloseTemplates: () => void;
+}
+
+export function LocalCanvas({ isTemplatesOpen, onCloseTemplates }: CanvasProps) {
+  const [nodes, setNodes, onNodesChange] = useNodesState<CanvasNode>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<CanvasEdge>([]);
+  const reactFlowInstance = useReactFlow();
+  const { screenToFlowPosition } = reactFlowInstance;
   const { onDragOver, onDrop } = useDragDrop(screenToFlowPosition, onNodesChange);
+
+  useKeyboardShortcuts({ reactFlowInstance });
 
   const handleConnect: OnConnect = React.useCallback(
     (connection: Connection) => {
@@ -201,6 +240,17 @@ export function LocalCanvas() {
     [onEdgesChange]
   );
 
+  const handleImportTemplate = React.useCallback(
+    (template: CanvasTemplate) => {
+      setNodes(template.nodes);
+      setEdges(template.edges);
+      setTimeout(() => {
+        reactFlowInstance.fitView({ duration: 300 });
+      }, 50);
+    },
+    [setNodes, setEdges, reactFlowInstance]
+  );
+
   return (
     <CanvasSurface
       nodes={nodes}
@@ -210,14 +260,19 @@ export function LocalCanvas() {
       onConnect={handleConnect}
       onDragOver={onDragOver}
       onDrop={onDrop}
-    />
+    >
+      <StarterTemplatesModal
+        isOpen={isTemplatesOpen}
+        onClose={onCloseTemplates}
+        onImport={handleImportTemplate}
+      />
+    </CanvasSurface>
   );
 }
 
 // ---------- Liveblocks-connected canvas ----------
 
-export function LiveblocksCanvas() {
-
+export function LiveblocksCanvas({ isTemplatesOpen, onCloseTemplates }: CanvasProps) {
   const {
     nodes,
     edges,
@@ -231,8 +286,45 @@ export function LiveblocksCanvas() {
     edges: { initial: [] },
   });
 
-  const { screenToFlowPosition } = useReactFlow();
+  const reactFlowInstance = useReactFlow();
+  const { screenToFlowPosition } = reactFlowInstance;
   const { onDragOver, onDrop } = useDragDrop(screenToFlowPosition, onNodesChange);
+
+  const undo = useUndo();
+  const redo = useRedo();
+  const canUndo = useCanUndo();
+  const canRedo = useCanRedo();
+
+  useKeyboardShortcuts({ reactFlowInstance, undo, redo });
+
+  const handleImportTemplate = React.useCallback(
+    (template: CanvasTemplate) => {
+      // 1. Delete all current nodes and edges
+      const currentNodes = nodes || [];
+      const currentEdges = edges || [];
+      onDelete({ nodes: currentNodes, edges: currentEdges });
+
+      // 2. Add the template's nodes
+      const nodeChanges = template.nodes.map((node) => ({
+        type: "add" as const,
+        item: node,
+      }));
+      onNodesChange(nodeChanges);
+
+      // 3. Add the template's edges
+      const edgeChanges = template.edges.map((edge) => ({
+        type: "add" as const,
+        item: edge,
+      }));
+      onEdgesChange(edgeChanges);
+
+      // 4. Fit view
+      setTimeout(() => {
+        reactFlowInstance.fitView({ duration: 300 });
+      }, 50);
+    },
+    [nodes, edges, onDelete, onNodesChange, onEdgesChange, reactFlowInstance]
+  );
 
   return (
     <CanvasSurface
@@ -245,8 +337,17 @@ export function LiveblocksCanvas() {
       onDragOver={onDragOver}
       onDrop={onDrop}
       isLoading={isLoading}
+      undo={undo}
+      redo={redo}
+      canUndo={canUndo}
+      canRedo={canRedo}
     >
       <Cursors />
+      <StarterTemplatesModal
+        isOpen={isTemplatesOpen}
+        onClose={onCloseTemplates}
+        onImport={handleImportTemplate}
+      />
     </CanvasSurface>
   );
 }
