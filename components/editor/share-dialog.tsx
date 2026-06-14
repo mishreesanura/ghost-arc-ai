@@ -139,9 +139,9 @@ export function ShareDialog({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-surface border-default text-text-primary rounded-xl max-w-md w-full">
+      <DialogContent className="bg-surface border-default text-text-primary rounded-3xl max-w-md w-full">
         <DialogHeader>
-          <DialogTitle className="text-lg font-bold">Share &quot;{projectName}&quot;</DialogTitle>
+          <DialogTitle className="text-text-primary text-lg font-semibold">Share &quot;{projectName}&quot;</DialogTitle>
           <DialogDescription className="text-text-muted text-sm">
             Invite collaborators to design this system together in real-time.
           </DialogDescription>
@@ -195,7 +195,7 @@ export function ShareDialog({
               <Button
                 type="submit"
                 disabled={isInviting || !inviteEmail.trim()}
-                className="bg-accent-primary text-bg-base hover:bg-accent-primary/90 shrink-0 gap-1.5"
+                className="bg-accent-primary text-black hover:bg-accent-primary/95 font-semibold rounded-xl disabled:bg-subtle disabled:text-text-muted disabled:opacity-50 shrink-0 gap-1.5"
               >
                 {isInviting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -330,7 +330,7 @@ export function ShareDialog({
           <Button
             type="button"
             onClick={onClose}
-            className="w-full bg-accent-primary text-bg-base hover:bg-accent-primary/90 font-semibold text-xs py-2 rounded-xl"
+            className="w-full bg-accent-primary text-black hover:bg-accent-primary/95 font-semibold text-xs py-2 rounded-xl"
           >
             Done
           </Button>

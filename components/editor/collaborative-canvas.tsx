@@ -121,12 +121,12 @@ interface CanvasSurfaceProps {
 const defaultEdgeOptions = {
   type: "canvasEdge",
   style: {
-    stroke: "#6b7280",
+    stroke: "var(--color-text-muted)",
     strokeWidth: 2,
   },
   markerEnd: {
     type: MarkerType.ArrowClosed,
-    color: "#6b7280",
+    color: "var(--color-text-muted)",
   },
 };
 

@@ -67,7 +67,7 @@ function Swatch({ fill, text, name, isActive, onClick }: SwatchProps) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        "relative w-5 h-5 rounded-full transition-all duration-150 ease-out focus:outline-none flex items-center justify-center border",
+        "relative w-6 h-6 rounded-full transition-all duration-150 ease-out focus:outline-none flex items-center justify-center border",
         isActive 
           ? "scale-110 border-white" 
           : "border-transparent hover:scale-105"
@@ -79,7 +79,7 @@ function Swatch({ fill, text, name, isActive, onClick }: SwatchProps) {
     >
       {isActive && (
         <span 
-          className="w-1.5 h-1.5 rounded-full" 
+          className="w-2 h-2 rounded-full" 
           style={{ backgroundColor: text }}
         />
       )}
