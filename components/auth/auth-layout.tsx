@@ -10,7 +10,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
         {/* Logo at the top-left */}
         <div className="absolute top-10 left-12 lg:left-20 flex items-center gap-3">
           <div className="h-6 w-6 rounded bg-accent-primary" />
-          <span className="text-[17px] font-bold tracking-tight text-text-primary">Ghost AI</span>
+          <span className="text-[17px] font-bold tracking-tight text-text-primary">GhostArc AI</span>
         </div>
 
         <div className="relative z-10 w-full max-w-md space-y-12">
@@ -20,7 +20,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
               Design systems at the<br />speed of thought.
             </h1>
             <p className="text-text-secondary text-[15px] leading-relaxed max-w-[400px]">
-              Describe your architecture in plain English. Ghost AI maps it to a shared canvas your whole team can refine in real time.
+              Describe your architecture in plain English. GhostArc AI maps it to a shared canvas your whole team can refine in real time.
             </p>
           </div>
 
@@ -66,7 +66,7 @@ export function AuthLayout({ children }: { children: React.ReactNode }) {
 
         {/* Footer in the bottom-left */}
         <div className="absolute bottom-10 left-12 lg:left-20 text-[13px] text-text-faint">
-          &copy; 2026 Ghost AI. All rights reserved.
+          &copy; 2026 GhostArc AI. All rights reserved.
         </div>
       </div>
 

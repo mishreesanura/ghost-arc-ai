@@ -50,7 +50,7 @@ export const generateSpecTask = task({
     };
 
     try {
-      await publishStatus("Ghost AI is reviewing your canvas architecture...");
+      await publishStatus("GhostArc AI is reviewing your canvas architecture...");
 
       // Formulate the prompt for Gemini
       const geminiModel = google("gemini-2.5-flash");
@@ -88,7 +88,7 @@ Output ONLY clean, valid, standard Markdown. Avoid surrounding it with code bloc
         }))
       );
 
-      await publishStatus("Ghost AI is writing the technical specification...");
+      await publishStatus("GhostArc AI is writing the technical specification...");
 
       const result = await generateText({
         model: geminiModel,
@@ -96,7 +96,7 @@ Output ONLY clean, valid, standard Markdown. Avoid surrounding it with code bloc
         prompt: `Conversation context:\n${chatHistoryString}\n\nCanvas Architecture:\nNodes:\n${nodesString}\nEdges:\n${edgesString}`,
       });
 
-      await publishStatus("Ghost AI is saving your technical specification...");
+      await publishStatus("GhostArc AI is saving your technical specification...");
 
       // Create a ProjectSpec record first to get the specId
       const { prisma: prismaClient } = await import("@/lib/prisma");

@@ -18,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ghost AI - Real-time Collaborative System Design Workspace",
-  description: "Ghost AI is a real-time collaborative system design workspace. Map system designs onto a shared canvas from plain English prompts and generate technical specifications.",
+  title: "GhostArc AI - Real-time Collaborative System Design Workspace",
+  description: "GhostArc AI is a real-time collaborative system design workspace. Map system designs onto a shared canvas from plain English prompts and generate technical specifications.",
 };
 
 export default function RootLayout({
