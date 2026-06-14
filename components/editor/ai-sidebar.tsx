@@ -89,9 +89,9 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
       enabled: !!runId && !!publicToken,
       onComplete: async (completedRun, err) => {
         console.log("AI run finished:", completedRun, err);
-        const statusText = latestStatusMessage || "Ghost AI successfully completed design generation!";
+        const statusText = latestStatusMessage || "GhostArc AI successfully completed design generation!";
         const finalContent = (err || completedRun.status === "FAILED")
-          ? `Ghost AI run encountered an error: ${err?.message || (completedRun as any).error?.message || "Ghost AI run encountered an error."}`
+          ? `GhostArc AI run encountered an error: ${err?.message || (completedRun as any).error?.message || "GhostArc AI run encountered an error."}`
           : statusText;
 
         // Immediately add final response locally
@@ -106,7 +106,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
 
         // Dispatch custom event to notify local canvas to reload the updated state from database
         if (typeof window !== "undefined") {
-          window.dispatchEvent(new CustomEvent("ghost-ai-completed", { detail: { roomId } }));
+          window.dispatchEvent(new CustomEvent("ghostarc-ai-completed", { detail: { roomId } }));
         }
 
         try {
@@ -130,15 +130,15 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
   useEffect(() => {
     if (!run) return;
     if (run.status === "QUEUED") {
-      setLocalStatusMessage("Ghost AI task is queued...");
+      setLocalStatusMessage("GhostArc AI task is queued...");
     } else if (run.status === "EXECUTING") {
-      setLocalStatusMessage("Ghost AI is executing the design mutations...");
+      setLocalStatusMessage("GhostArc AI is executing the design mutations...");
     } else if (run.status === "COMPLETED") {
       setLocalStatusMessage(null);
       setRunId(null);
       setPublicToken(null);
     } else if (run.status === "FAILED" || run.status === "CRASHED" || run.status === "SYSTEM_FAILURE" || run.status === "CANCELED") {
-      setLocalStatusMessage("Ghost AI run failed.");
+      setLocalStatusMessage("GhostArc AI run failed.");
       const timer = setTimeout(() => {
         setRunId(null);
         setPublicToken(null);
@@ -171,7 +171,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
     if (specRun.status === "QUEUED") {
       setSpecStatusMessage("Spec generation task is queued...");
     } else if (specRun.status === "EXECUTING") {
-      setSpecStatusMessage("Ghost AI is writing the technical specification...");
+      setSpecStatusMessage("GhostArc AI is writing the technical specification...");
     } else if (specRun.status === "COMPLETED") {
       setSpecStatusMessage(null);
       setSpecRunId(null);
@@ -399,13 +399,13 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
       setPublicToken(newPublicToken);
     } catch (err: any) {
       console.error("Failed to execute design flow:", err);
-      const errMsg = err.message || "Failed to trigger Ghost AI. Please try again.";
+      const errMsg = err.message || "Failed to trigger GhostArc AI. Please try again.";
 
       // Render assistant error locally
       const assistantErrorMsg: Message = {
         id: `assistant-local-error-${Date.now()}`,
         sender: "assistant",
-        text: `Failed to trigger Ghost AI: ${errMsg}`,
+        text: `Failed to trigger GhostArc AI: ${errMsg}`,
         timestamp: Date.now(),
       };
       setLocalMessages((prev) => [...prev, assistantErrorMsg]);
@@ -415,7 +415,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
         await createFeedMessage("ai-chat", {
           sender: "assistant",
           role: "assistant",
-          content: `Failed to trigger Ghost AI: ${errMsg}`,
+          content: `Failed to trigger GhostArc AI: ${errMsg}`,
           timestamp: Date.now(),
         });
       } catch (feedErr) {
@@ -459,7 +459,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-semibold text-text-primary leading-tight">AI Workspace</span>
-            <span className="text-[10px] text-text-muted">Collaborate with Ghost AI</span>
+            <span className="text-[10px] text-text-muted">Collaborate with GhostArc AI</span>
           </div>
         </div>
         <Button
@@ -506,7 +506,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
                   <Bot className="h-6 w-6" strokeWidth={1.5} />
                 </div>
                 <div className="space-y-1.5">
-                  <h3 className="text-sm font-medium text-text-primary">Ghost AI Architect</h3>
+                  <h3 className="text-sm font-medium text-text-primary">GhostArc AI Architect</h3>
                   <p className="text-xs text-text-muted leading-relaxed max-w-[220px]">
                     Describe your architecture goals, and let the AI draft system designs or technical specifications.
                   </p>
@@ -555,7 +555,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
               <div className="flex items-center gap-2.5 min-w-0">
                 <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" style={{ color: "#62C073" }} />
                 <span className="text-[11px] font-medium truncate" style={{ color: "#62C073" }}>
-                  {latestStatusMessage || "Ghost AI is analyzing your design..."}
+                  {latestStatusMessage || "GhostArc AI is analyzing your design..."}
                 </span>
               </div>
               <span className="text-[9px] font-mono text-text-muted shrink-0 uppercase tracking-wider">
@@ -577,7 +577,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={isAiThinking || !!runId ? "Please wait until generation completes..." : "Ask Ghost AI..."}
+                placeholder={isAiThinking || !!runId ? "Please wait until generation completes..." : "Ask GhostArc AI..."}
                 disabled={isAiThinking || !!runId}
                 className="flex-1 bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-xs text-text-primary placeholder:text-text-faint resize-none p-1 min-h-[72px] max-h-[160px] overflow-y-auto outline-none nodrag nopan disabled:opacity-50"
               />
@@ -622,7 +622,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
               <div className="text-center">
                 <p className="text-[11px] font-semibold text-text-primary">Generating Specification...</p>
                 <p className="text-[9px] text-text-muted mt-0.5">
-                  {specStatusMessage || "Ghost AI is reviewing and writing..."}
+                  {specStatusMessage || "GhostArc AI is reviewing and writing..."}
                 </p>
               </div>
             </div>

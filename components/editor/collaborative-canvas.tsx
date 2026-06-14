@@ -332,16 +332,16 @@ export function LocalCanvas({
     loadSavedState();
   }, [initialNodes, loadSavedState]);
 
-  // Auto-refresh canvas when Ghost AI completes mutations
+  // Auto-refresh canvas when GhostArc AI completes mutations
   React.useEffect(() => {
     const handleAiCompleted = () => {
-      console.log("Ghost AI completed design generation, auto-refreshing local canvas state...");
+      console.log("GhostArc AI completed design generation, auto-refreshing local canvas state...");
       loadSavedState();
     };
 
-    window.addEventListener("ghost-ai-completed", handleAiCompleted);
+    window.addEventListener("ghostarc-ai-completed", handleAiCompleted);
     return () => {
-      window.removeEventListener("ghost-ai-completed", handleAiCompleted);
+      window.removeEventListener("ghostarc-ai-completed", handleAiCompleted);
     };
   }, [loadSavedState]);
 

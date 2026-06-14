@@ -50,7 +50,7 @@ export function WorkspaceNavbar({
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-ai text-text-primary font-bold">
             G
           </div>
-          <span className="text-sm font-bold tracking-tight text-text-primary hidden sm:inline-block">Ghost AI</span>
+          <span className="text-sm font-bold tracking-tight text-text-primary hidden sm:inline-block">GhostArc AI</span>
         </div>
         <div className="h-4 w-[1px] bg-border-default hidden sm:block shrink-0" />
         <span className="text-sm font-semibold text-text-primary truncate max-w-[150px] sm:max-w-[300px]">

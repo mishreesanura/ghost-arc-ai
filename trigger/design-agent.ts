@@ -45,14 +45,14 @@ export const designAgentTask = task({
     const updatePresence = async (isThinking: boolean, cursor: { x: number; y: number } | null = null) => {
       try {
         await liveblocks.setPresence(roomId, {
-          userId: "ghost-ai",
+          userId: "ghostarc-ai",
           data: {
             cursor,
             isThinking,
             thinking: isThinking,
           },
           userInfo: {
-            name: "Ghost AI",
+            name: "GhostArc AI",
             avatar: "",
             color: "#6457f9",
           },
@@ -65,7 +65,7 @@ export const designAgentTask = task({
 
     try {
       // 1. Initialize and notify start
-      await publishStatus("Ghost AI is analyzing your system architecture request...");
+      await publishStatus("GhostArc AI is analyzing your system architecture request...");
       await updatePresence(true, { x: 100, y: 100 });
 
       // 2. Fetch current canvas state
@@ -78,12 +78,12 @@ export const designAgentTask = task({
       });
 
       console.log(`Current state: ${currentNodes.length} nodes, ${currentEdges.length} edges.`);
-      await publishStatus("Ghost AI is planning the architecture nodes and connections...");
+      await publishStatus("GhostArc AI is planning the architecture nodes and connections...");
       await updatePresence(true, { x: 200, y: 150 });
 
       // 3. Ask Gemini for operations using tools
       const geminiModel = google("gemini-2.5-flash");
-      const systemInstruction = `You are a system architecture generator called Ghost AI.
+      const systemInstruction = `You are a system architecture generator called GhostArc AI.
 Your goal is to parse user design requirements and output structured operations to modify a system design canvas by invoking the appropriate tools.
 The canvas is composed of nodes and edges.
 
@@ -201,7 +201,7 @@ Invoke one or more tools to perform the canvas mutations. When you are done prop
       console.log(`Generated ${toolCalls.length} tool calls.`);
 
       // 4. Apply operations to storage
-      await publishStatus("Ghost AI is writing updates to the collaborative canvas...");
+      await publishStatus("GhostArc AI is writing updates to the collaborative canvas...");
       await updatePresence(true, { x: 300, y: 300 });
 
       const canvasActions = toolCalls.filter((tc) => tc.toolName !== "finalizeDesign");
@@ -319,7 +319,7 @@ Invoke one or more tools to perform the canvas mutations. When you are done prop
       }
 
       // 5. Done
-      await publishStatus(summaryText || "Ghost AI successfully completed design generation!");
+      await publishStatus(summaryText || "GhostArc AI successfully completed design generation!");
       await updatePresence(false, null);
 
       return {
@@ -328,7 +328,7 @@ Invoke one or more tools to perform the canvas mutations. When you are done prop
       };
     } catch (err: any) {
       console.error("Design Agent Task failed:", err);
-      await publishStatus(`Ghost AI failed: ${err.message || err}`);
+      await publishStatus(`GhostArc AI failed: ${err.message || err}`);
       await updatePresence(false, null);
       throw err;
     }

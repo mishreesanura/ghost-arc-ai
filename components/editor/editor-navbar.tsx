@@ -32,7 +32,7 @@ export function EditorNavbar({ isSidebarOpen, onToggleSidebar }: EditorNavbarPro
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-ai text-text-primary font-bold">
             G
           </div>
-          <span className="text-lg font-bold tracking-tight text-text-primary">Ghost AI</span>
+          <span className="text-lg font-bold tracking-tight text-text-primary">GhostArc AI</span>
         </div>
       </div>
 
