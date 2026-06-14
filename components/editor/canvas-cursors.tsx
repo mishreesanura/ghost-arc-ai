@@ -44,9 +44,12 @@ export function CanvasCursors() {
               />
             </svg>
             <div
-              className="px-2 py-0.5 rounded-md text-[10px] font-bold text-bg-base whitespace-nowrap shadow-[0_2px_8px_rgba(0,0,0,0.4)] border border-white/20 select-none"
+              className="px-2 py-0.5 rounded-md text-[10px] font-bold text-bg-base whitespace-nowrap shadow-[0_2px_8px_rgba(0,0,0,0.4)] border border-white/20 select-none flex items-center gap-1.5"
               style={{ backgroundColor: color }}
             >
+              {presence?.thinking && (
+                <span className="h-2 w-2 border border-current border-t-transparent rounded-full animate-spin shrink-0" />
+              )}
               {name}
             </div>
           </div>

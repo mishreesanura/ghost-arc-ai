@@ -1,0 +1,43 @@
+{
+  "configPath": "C:\\Users\\Mishree\\ghost-ai\\.trigger\\tmp\\build-f6kVHD\\ghost-ai\\trigger.config.mjs",
+  "customConditions": [
+  ],
+  "prompts": [
+  ],
+  "queues": [
+  ],
+  "runtime": "node",
+  "runtimeVersion": "24.14.1",
+  "tasks": [
+    {
+      "entryPoint": "C:\\Users\\Mishree\\ghost-ai\\.trigger\\tmp\\build-f6kVHD\\ghost-ai\\trigger\\design-agent.mjs",
+      "filePath": "trigger/design-agent.ts",
+      "id": "design-agent",
+      "maxDuration": 3600,
+      "retry": {
+        "factor": 2,
+        "maxAttempts": 3,
+        "maxTimeoutInMs": 10000,
+        "minTimeoutInMs": 1000
+      }
+    },
+    {
+      "entryPoint": "C:\\Users\\Mishree\\ghost-ai\\.trigger\\tmp\\build-f6kVHD\\ghost-ai\\trigger\\generate-spec.mjs",
+      "filePath": "trigger/generate-spec.ts",
+      "id": "generate-spec",
+      "maxDuration": 3600,
+      "retry": {
+        "factor": 2,
+        "maxAttempts": 3,
+        "maxTimeoutInMs": 10000,
+        "minTimeoutInMs": 1000
+      }
+    }
+  ],
+  "timings": {
+    "lib/prisma.ts": 215.10500000000002,
+    "trigger/design-agent.ts": 125.47649999999999,
+    "trigger/generate-spec.ts": 41.83589999999981
+  },
+  "workerEntryPoint": "C:\\Users\\Mishree\\ghost-ai\\.trigger\\tmp\\build-f6kVHD\\AppData\\Local\\npm-cache\\_npx\\f51a09bd0abf5f10\\node_modules\\trigger.dev\\dist\\esm\\entryPoints\\dev-run-worker.mjs"
+}

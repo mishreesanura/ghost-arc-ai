@@ -195,14 +195,9 @@ function CanvasSurface({
       }
     };
 
-    const wrapper = wrapperRef.current;
-    if (wrapper) {
-      wrapper.addEventListener("keydown", handleKeyDown);
-    }
+    window.addEventListener("keydown", handleKeyDown);
     return () => {
-      if (wrapper) {
-        wrapper.removeEventListener("keydown", handleKeyDown);
-      }
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [allNodes, allEdges, onDelete]);
 
@@ -282,6 +277,8 @@ interface CanvasProps {
   isTemplatesOpen: boolean;
   onCloseTemplates: () => void;
   onSaveStatusChange: (status: SaveStatus) => void;
+  initialNodes?: CanvasNode[];
+  initialEdges?: CanvasEdge[];
 }
 
 export function LocalCanvas({
@@ -289,40 +286,64 @@ export function LocalCanvas({
   isTemplatesOpen,
   onCloseTemplates,
   onSaveStatusChange,
-}: CanvasProps) {
-  const [nodes, setNodes, onNodesChange] = useNodesState<CanvasNode>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<CanvasEdge>([]);
+  initialNodes,
+  initialEdges,
+  onSyncState,
+}: CanvasProps & { onSyncState?: (nodes: CanvasNode[], edges: CanvasEdge[]) => void }) {
+  const [nodes, setNodes, onNodesChange] = useNodesState<CanvasNode>(initialNodes ?? []);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<CanvasEdge>(initialEdges ?? []);
   const reactFlowInstance = useReactFlow();
   const { screenToFlowPosition } = reactFlowInstance;
   const { onDragOver, onDrop } = useDragDrop(screenToFlowPosition, onNodesChange);
 
   useKeyboardShortcuts({ reactFlowInstance });
 
-  const [isInitialized, setIsInitialized] = React.useState(false);
+  const [isInitialized, setIsInitialized] = React.useState(!!(initialNodes && initialNodes.length > 0));
+
+  // Call onSyncState on change
+  React.useEffect(() => {
+    onSyncState?.(nodes, edges);
+  }, [nodes, edges, onSyncState]);
+
+  const loadSavedState = React.useCallback(async () => {
+    try {
+      const res = await fetch(`/api/projects/${projectId}/canvas`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && (data.nodes?.length > 0 || data.edges?.length > 0)) {
+          setNodes(data.nodes);
+          setEdges(data.edges);
+          setTimeout(() => {
+            reactFlowInstance.fitView({ duration: 300 });
+          }, 100);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load saved local canvas state:", error);
+    }
+    setIsInitialized(true);
+  }, [projectId, setNodes, setEdges, reactFlowInstance]);
 
   // Load saved canvas state on mount for Local mode
   React.useEffect(() => {
-    const loadSavedState = async () => {
-      try {
-        const res = await fetch(`/api/projects/${projectId}/canvas`);
-        if (res.ok) {
-          const data = await res.json();
-          if (data && (data.nodes?.length > 0 || data.edges?.length > 0)) {
-            setNodes(data.nodes);
-            setEdges(data.edges);
-            setTimeout(() => {
-              reactFlowInstance.fitView({ duration: 300 });
-            }, 100);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to load saved local canvas state:", error);
-      }
-      setIsInitialized(true);
+    if (initialNodes && initialNodes.length > 0) {
+      return;
+    }
+    loadSavedState();
+  }, [initialNodes, loadSavedState]);
+
+  // Auto-refresh canvas when Ghost AI completes mutations
+  React.useEffect(() => {
+    const handleAiCompleted = () => {
+      console.log("Ghost AI completed design generation, auto-refreshing local canvas state...");
+      loadSavedState();
     };
 
-    loadSavedState();
-  }, [projectId, setNodes, setEdges, reactFlowInstance]);
+    window.addEventListener("ghost-ai-completed", handleAiCompleted);
+    return () => {
+      window.removeEventListener("ghost-ai-completed", handleAiCompleted);
+    };
+  }, [loadSavedState]);
 
   // Hook up autosave for Local mode
   const { saveStatus } = useCanvasAutosave({
@@ -351,6 +372,18 @@ export function LocalCanvas({
     [onEdgesChange]
   );
 
+  const handleDelete = React.useCallback(
+    ({ nodes: nodesToDelete, edges: edgesToDelete }: { nodes: CanvasNode[]; edges: CanvasEdge[] }) => {
+      if (nodesToDelete.length > 0) {
+        onNodesChange(nodesToDelete.map((node) => ({ type: "remove" as const, id: node.id })));
+      }
+      if (edgesToDelete.length > 0) {
+        onEdgesChange(edgesToDelete.map((edge) => ({ type: "remove" as const, id: edge.id })));
+      }
+    },
+    [onNodesChange, onEdgesChange]
+  );
+
   const handleImportTemplate = React.useCallback(
     (template: CanvasTemplate) => {
       setNodes(template.nodes);
@@ -369,6 +402,7 @@ export function LocalCanvas({
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={handleConnect}
+      onDelete={handleDelete}
       onDragOver={onDragOver}
       onDrop={onDrop}
     >
@@ -391,7 +425,8 @@ export function LiveblocksCanvas({
   isTemplatesOpen,
   onCloseTemplates,
   onSaveStatusChange,
-}: CanvasProps) {
+  onSyncState,
+}: CanvasProps & { onSyncState?: (nodes: CanvasNode[], edges: CanvasEdge[]) => void }) {
   const {
     nodes,
     edges,
@@ -404,6 +439,12 @@ export function LiveblocksCanvas({
     nodes: { initial: [] },
     edges: { initial: [] },
   });
+
+  React.useEffect(() => {
+    if (nodes || edges) {
+      onSyncState?.(nodes ?? [], edges ?? []);
+    }
+  }, [nodes, edges, onSyncState]);
 
   const others = useOthers();
 

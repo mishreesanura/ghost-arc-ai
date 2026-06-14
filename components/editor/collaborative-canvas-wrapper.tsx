@@ -56,7 +56,7 @@ function LiveblocksConnectionMonitor({
     const timer = setTimeout(() => {
       console.warn(`Liveblocks connection timed out (status: ${status}). Falling back to local canvas.`);
       onTimeout();
-    }, 5000);
+    }, 30000); // 30 seconds connection timeout
 
     return () => clearTimeout(timer);
   }, [status, onTimeout]);
@@ -65,6 +65,7 @@ function LiveblocksConnectionMonitor({
 }
 
 import { SaveStatus } from "@/hooks/use-canvas-autosave";
+import { CanvasNode, CanvasEdge } from "@/types/canvas";
 
 function LiveblocksWithTimeout({
   projectId,
@@ -72,35 +73,27 @@ function LiveblocksWithTimeout({
   isTemplatesOpen,
   onCloseTemplates,
   onSaveStatusChange,
+  onSyncState,
 }: {
   projectId: string;
   onTimeout: () => void;
   isTemplatesOpen: boolean;
   onCloseTemplates: () => void;
   onSaveStatusChange: (status: SaveStatus) => void;
+  onSyncState: (nodes: CanvasNode[], edges: CanvasEdge[]) => void;
 }) {
   return (
-    <LiveblocksProvider authEndpoint="/api/liveblocks-auth">
-      <RoomProvider
-        id={projectId}
-        initialPresence={{
-          cursor: null,
-          isThinking: false,
-          thinking: false,
-        }}
-      >
-        <LiveblocksConnectionMonitor onTimeout={onTimeout}>
-          <ReactFlowProvider>
-            <LiveblocksCanvas
-              projectId={projectId}
-              isTemplatesOpen={isTemplatesOpen}
-              onCloseTemplates={onCloseTemplates}
-              onSaveStatusChange={onSaveStatusChange}
-            />
-          </ReactFlowProvider>
-        </LiveblocksConnectionMonitor>
-      </RoomProvider>
-    </LiveblocksProvider>
+    <LiveblocksConnectionMonitor onTimeout={onTimeout}>
+      <ReactFlowProvider>
+        <LiveblocksCanvas
+          projectId={projectId}
+          isTemplatesOpen={isTemplatesOpen}
+          onCloseTemplates={onCloseTemplates}
+          onSaveStatusChange={onSaveStatusChange}
+          onSyncState={onSyncState}
+        />
+      </ReactFlowProvider>
+    </LiveblocksConnectionMonitor>
   );
 }
 
@@ -111,6 +104,7 @@ interface CollaborativeCanvasWrapperProps {
   isTemplatesOpen: boolean;
   onCloseTemplates: () => void;
   onSaveStatusChange: (status: SaveStatus) => void;
+  onSyncState?: (nodes: CanvasNode[], edges: CanvasEdge[]) => void;
 }
 
 export function CollaborativeCanvasWrapper({
@@ -118,13 +112,22 @@ export function CollaborativeCanvasWrapper({
   isTemplatesOpen,
   onCloseTemplates,
   onSaveStatusChange,
+  onSyncState,
 }: CollaborativeCanvasWrapperProps) {
   const [useLocal, setUseLocal] = useState(false);
+  const [lastNodes, setLastNodes] = useState<CanvasNode[]>([]);
+  const [lastEdges, setLastEdges] = useState<CanvasEdge[]>([]);
 
   const handleLiveblocksError = React.useCallback(() => {
     console.warn("Switching to local canvas mode");
     setUseLocal(true);
   }, []);
+
+  const handleSyncState = React.useCallback((nodes: CanvasNode[], edges: CanvasEdge[]) => {
+    setLastNodes(nodes);
+    setLastEdges(edges);
+    onSyncState?.(nodes, edges);
+  }, [onSyncState]);
 
   // Local-only mode: no Liveblocks providers, just React Flow
   if (useLocal) {
@@ -135,6 +138,9 @@ export function CollaborativeCanvasWrapper({
           isTemplatesOpen={isTemplatesOpen}
           onCloseTemplates={onCloseTemplates}
           onSaveStatusChange={onSaveStatusChange}
+          initialNodes={lastNodes}
+          initialEdges={lastEdges}
+          onSyncState={handleSyncState}
         />
       </ReactFlowProvider>
     );
@@ -151,6 +157,9 @@ export function CollaborativeCanvasWrapper({
             isTemplatesOpen={isTemplatesOpen}
             onCloseTemplates={onCloseTemplates}
             onSaveStatusChange={onSaveStatusChange}
+            initialNodes={lastNodes}
+            initialEdges={lastEdges}
+            onSyncState={handleSyncState}
           />
         </ReactFlowProvider>
       }
@@ -161,6 +170,7 @@ export function CollaborativeCanvasWrapper({
         isTemplatesOpen={isTemplatesOpen}
         onCloseTemplates={onCloseTemplates}
         onSaveStatusChange={onSaveStatusChange}
+        onSyncState={handleSyncState}
       />
     </LiveblocksErrorBoundary>
   );

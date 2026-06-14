@@ -4,11 +4,11 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Phase 2: Database Setup, Editor Shell Wiring & Share Dialog Complete
+- Phase 2: Spec Persistence & Download Complete
 
 ## Current Goal
 
-- All initial routing, workspace layouts, access controls, project management API endpoints, sidebar configurations, and real-time collaborator share controls are complete.
+- All Phase 2 backend spec generation, persistence in Vercel Blob, access-checked database spec records, and secure download routes are fully complete.
 
 ## Completed
 
@@ -39,7 +39,16 @@ Update this file whenever the current phase, active feature, or implementation s
 - Phase 2: Bug Fixes. Safeguarded the `saveLabel` function in `components/editor/canvas-edge.tsx` to handle potential undefined `edge.data` objects. Replaced all remaining hardcoded hex color classes with variable-backed Tailwind CSS theme tokens (`bg-surface`, `border-default`, `bg-elevated`, `bg-subtle`, `text-text-muted`, and `bg-base`) inside `components/editor/starter-templates-modal.tsx`.
 - Phase 2: Presence, Avatars, and Live Cursors. Integrated collaborator avatars and Clerk `UserButton` overlapping group in the top-right of both local and collaborative canvases. Implemented live cursor coordinate broadcasting with SVG pointers and floating name badges. Verified all changes via a successful production build.
 - Phase 2: AI Workspace Sidebar Shell. Extracted collapsible right sidebar into a reusable `AiSidebar` component. Integrated shadcn `Tabs` with custom accent active styling. Added scrollable `AI Architect` tab with custom bot empty state, starter prompts chips, mock message styles for both users (cyan accents) and assistant, and a custom auto-resizing text input area. Created `Specs` tab containing a "Generate Spec" action button and static spec document card with proper layout styling.
-- Phase 2: Canvas Autosave and Loading. Installed `@vercel/blob` and implemented REST endpoints for canvas persistence (`PUT/GET /api/projects/[projectId]/canvas`). Designed the debounced custom hook `useCanvasAutosave` to save nodes and edges. Integrated initial state loading on mount if the collaborative room is empty, and added a visual save status indicator (Saving, Saved, Save Error) to the top `WorkspaceNavbar`. Verified all changes with a successful production build.
+- Phase 2: Canvas Autosave and Loading. Installed `@vercel/blob` and implemented REST endpoints for canvas persistence (`PUT/GET /api/projects/[projectId]/canvas`) using private blob storage to protect project details. Designed the debounced custom hook `useCanvasAutosave` to save nodes and edges. Integrated initial state loading on mount if the collaborative room is empty, and added a visual save status indicator (Saving, Saved, Save Error) to the top `WorkspaceNavbar`. Verified all changes with a successful production build.
+- Phase 2: Trigger.dev Setup. Installed `@trigger.dev/sdk` dependency, configured `trigger.config.ts` importing from `@trigger.dev/sdk/v3` with environment variable project binding, node runtime, `maxDuration` limits, and custom retry policies. Configured `TRIGGER_SECRET_KEY` and `TRIGGER_PROJECT_REF` placeholders in `.env.local`, and created the sample task `hello-world` in `trigger/example.ts`. Verified with a successful production build.
+- Phase 2: Design Agent API & Task Run Tracking. Created a `TaskRun` Prisma schema model to track Trigger.dev backend job runs and ownership. Built the design trigger route `POST /api/ai/design` which authenticates the user, checks project access, triggers the `design-agent` task through Trigger.dev, and saves the task run tracking metadata. Implemented the token route `POST /api/ai/design/token` which validates task run ownership and issues a scoped Trigger.dev public access token. Developed a minimal background task `trigger/design-agent.ts` to log/echo inputs. Verified with a successful production build.
+- Phase 2: AI Design Agent Task. Implemented the full background task in `trigger/design-agent.ts` integrating Vercel AI SDK (`@ai-sdk/google` Gemini model) to interpret user design prompts. The task queries the current canvas nodes/edges in real-time, displays AI thinking states and live cursor movements across rooms using Liveblocks presence APIs, posts granular progress statuses to `ai-status-feed`, translates prompt requests into exact structural mutations (adding, updating, resizing, moving, deleting nodes and edges following layout, shape, and color rules), updates the collaborative room state using `mutateFlow`, handles errors cleanly, and clears presence when done. Verified with a successful production build.
+- Phase 2: AI Presence State & Collaborative Room Chat Feed. Implemented shared AI thinking states in the workspace. Live cursor name badges display active thinking indicators (spinners) in real-time. Created and integrated the `ai-chat` feed with Zod-based validation, rendering room chat messages in chronological order, with chat inputs and buttons locked during active AI generation. Added status message rendering from `ai-status-feed` while retaining full usability of the sidebar tabs. Ensured both `ai-chat` and `ai-status-feed` feeds are initialized during Liveblocks authentication to prevent client-side "Feed not found" console errors. Verified with a successful production build.
+- Phase 2: AI Chat Sidebar Integration. Connected `roomId` prop from `WorkspaceClient` to `AiSidebar`. Integrated `useRealtimeRun` from `@trigger.dev/react-hooks` to track background task execution in real time. Orchestrated sequential trigger/token API requests on submission, styled user bubble colors with green contrast (`#62C073`), disabled input controls during active runs, and displayed a compact status strip above the input. Verified with a successful TypeScript type check.
+- Phase 2: Spec Generation API and Trigger.dev Backend Integration. Implemented spec trigger route `POST /api/ai/spec`, spec token route `POST /api/ai/spec/token` with ownership verification via Prisma `TaskRun` records, and the `generate-spec` Trigger.dev background task integrating Google Gemini via `@ai-sdk/google` to generate high-quality Markdown specs. Verified with successful TypeScript type checks.
+- Phase 2: Spec UI Integration. Implemented dynamic specification listing API route `GET /api/projects/[projectId]/specs`, built a custom lightweight React `MarkdownRenderer` component, and integrated dynamic listing, real-time Trigger.dev run tracking with `useRealtimeRun`, and a Radix-based specification preview modal with direct download hooks inside the collapsible AI Workspace sidebar.
+- Phase 2: Spec Persistence & Download. Implemented split Prisma schema update for `ProjectSpec` model. Integrated spec persistence inside the `generate-spec` Trigger.dev task, uploading the output Markdown spec securely to Vercel Blob (falling back to local storage in the `scratch/` directory). Built a secure `GET /api/projects/[projectId]/specs/[specId]/download` API endpoint that validates user authentication and project collaborator access and returns the generated spec as a downloadable attachment.
+
 
 ## In Progress
 
@@ -48,7 +57,7 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Next Up
 
-- Phase 2: AI Architecture Generation / Background Prompt Task Runs
+- None.
 
 
 ## Open Questions
@@ -69,3 +78,5 @@ Update this file whenever the current phase, active feature, or implementation s
 - Backend project API endpoints are fully implemented, secured, and compilation/build checks pass successfully.
 - Implemented and verified Unicode slugification, Prisma schema generator block provider fix, API route input validation, error notification banners, and exact pathname segment checks.
 - Implemented canvas autosave and loading with Vercel Blob and Prisma backend integration, wired status updates dynamically into WorkspaceNavbar, and verified with a production build.
+- Fixed an issue in the Trigger.dev spec generation worker where static database client imports initialized before environment variables were loaded, resulting in ECONNREFUSED database connection failures. Added defensive run status observers to reset frontend loading status states immediately when background tasks finish.
+

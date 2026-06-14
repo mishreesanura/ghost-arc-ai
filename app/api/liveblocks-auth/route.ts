@@ -60,6 +60,17 @@ export async function POST(request: Request) {
           name: project.name,
         },
       });
+      // Ensure the feeds exist for this room so the client doesn't throw a "Feed not found" error when subscribing.
+      try {
+        await liveblocks.createFeed({ roomId, feedId: "ai-chat" });
+      } catch (err) {
+        // Feed may already exist or creation failed
+      }
+      try {
+        await liveblocks.createFeed({ roomId, feedId: "ai-status-feed" });
+      } catch (err) {
+        // Feed may already exist or creation failed
+      }
     } catch (err) {
       console.error(`Failed to ensure Liveblocks room exists for project ${roomId}:`, err);
     }
