@@ -4,13 +4,15 @@ Update this file whenever the current phase, active feature, or implementation s
 
 ## Current Phase
 
-- Phase 2: Spec Persistence & Download Complete
+- Phase 2: Visual Polish & Accessibility Optimization Complete
 
 ## Current Goal
 
-- All Phase 2 backend spec generation, persistence in Vercel Blob, access-checked database spec records, and secure download routes are fully complete.
+- All Phase 2 backend, frontend rendering, and visual and accessibility refinement tasks are fully complete.
 
 ## Completed
+
+- Phase 2: Visual Polish & Accessibility Optimization Complete. Standardized modal and overlay border radii to `rounded-3xl` across CRUD, share, and spec preview dialogs. Aligned connection strokes and chat inputs/bubbles with CSS variables and Tailwind theme tokens (`var(--color-text-muted)` and `bg-state-success`/`text-state-success`), removing hardcoded hex values. Enhanced color toolbar touch targets to `w-6 h-6` for improved accessibility and WCAG compliance. Replaced custom Radix scroll areas with native scrollable containers styled using webkit scrollbars that match the project theme colors (using cyan accents on hover) for consistent visibility and standard keyboard scrolling. Optimized specifications list item hover colors and subtext contrast for readability. Tested and verified with a clean Next.js production build.
 
 - Phase 1: Design System & Foundation UI Components. Configured shadcn/ui with Radix & Nova preset, integrated CSS variables theme tokens, created `lib/utils.ts` helper, and added core components (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea).
 - Phase 1: Implemented base editor chrome components (`EditorNavbar`, `ProjectSidebar`) with integrated layout toggling and overlay/sliding properties.

@@ -67,16 +67,16 @@ export function ProjectDialogs({
   return (
     <>
       <Dialog open={activeDialog === "create"} onOpenChange={(open) => !open && closeDialog()}>
-        <DialogContent className="bg-surface border-default text-text-primary rounded-xl">
+        <DialogContent className="bg-surface border-default text-text-primary rounded-3xl">
           <DialogHeader>
-            <DialogTitle>Create Project</DialogTitle>
+            <DialogTitle className="text-text-primary text-lg font-semibold">Create Project</DialogTitle>
             <DialogDescription className="text-text-muted">
               Start a new architecture workspace.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4 py-2">
             <div className="space-y-2">
-              <label htmlFor="create-name" className="text-sm font-medium">Project Name</label>
+              <label htmlFor="create-name" className="text-sm font-medium text-text-secondary">Project Name</label>
               <Input 
                 id="create-name"
                 ref={inputRef}
@@ -98,10 +98,10 @@ export function ProjectDialogs({
               </div>
             )}
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={closeDialog} disabled={isLoading} className="text-text-secondary hover:text-text-primary">
+              <Button type="button" variant="ghost" onClick={closeDialog} disabled={isLoading} className="text-text-secondary hover:text-text-primary hover:bg-subtle/50">
                 Cancel
               </Button>
-              <Button type="submit" className="bg-accent-primary text-bg-base hover:bg-accent-primary/90" disabled={isLoading || !projectName.trim()}>
+              <Button type="submit" className="bg-accent-primary text-black hover:bg-accent-primary/95 font-semibold rounded-xl disabled:bg-subtle disabled:text-text-muted disabled:opacity-50" disabled={isLoading || !projectName.trim()}>
                 {isLoading ? "Creating..." : "Create Project"}
               </Button>
             </DialogFooter>
@@ -110,16 +110,16 @@ export function ProjectDialogs({
       </Dialog>
 
       <Dialog open={activeDialog === "rename"} onOpenChange={(open) => !open && closeDialog()}>
-        <DialogContent className="bg-surface border-default text-text-primary rounded-xl">
+        <DialogContent className="bg-surface border-default text-text-primary rounded-3xl">
           <DialogHeader>
-            <DialogTitle>Rename Project</DialogTitle>
+            <DialogTitle className="text-text-primary text-lg font-semibold">Rename Project</DialogTitle>
             <DialogDescription className="text-text-muted">
               Current name: <span className="font-medium text-text-primary">{selectedProject?.name}</span>
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4 py-2">
             <div className="space-y-2">
-              <label htmlFor="rename-name" className="text-sm font-medium">New Name</label>
+              <label htmlFor="rename-name" className="text-sm font-medium text-text-secondary">New Name</label>
               <Input 
                 id="rename-name"
                 ref={inputRef}
@@ -135,10 +135,10 @@ export function ProjectDialogs({
               </div>
             )}
             <DialogFooter>
-              <Button type="button" variant="ghost" onClick={closeDialog} disabled={isLoading} className="text-text-secondary hover:text-text-primary">
+              <Button type="button" variant="ghost" onClick={closeDialog} disabled={isLoading} className="text-text-secondary hover:text-text-primary hover:bg-subtle/50">
                 Cancel
               </Button>
-              <Button type="submit" className="bg-accent-primary text-bg-base hover:bg-accent-primary/90" disabled={isLoading || !projectName.trim() || projectName === selectedProject?.name}>
+              <Button type="submit" className="bg-accent-primary text-black hover:bg-accent-primary/95 font-semibold rounded-xl disabled:bg-subtle disabled:text-text-muted disabled:opacity-50" disabled={isLoading || !projectName.trim() || projectName === selectedProject?.name}>
                 {isLoading ? "Saving..." : "Save Changes"}
               </Button>
             </DialogFooter>
@@ -147,9 +147,9 @@ export function ProjectDialogs({
       </Dialog>
 
       <Dialog open={activeDialog === "delete"} onOpenChange={(open) => !open && closeDialog()}>
-        <DialogContent className="bg-surface border-default text-text-primary rounded-xl">
+        <DialogContent className="bg-surface border-default text-text-primary rounded-3xl">
           <DialogHeader>
-            <DialogTitle>Delete Project</DialogTitle>
+            <DialogTitle className="text-text-primary text-lg font-semibold">Delete Project</DialogTitle>
             <DialogDescription className="text-text-muted">
               Are you sure you want to delete <span className="font-medium text-text-primary">{selectedProject?.name}</span>? This action cannot be undone.
             </DialogDescription>
@@ -160,10 +160,10 @@ export function ProjectDialogs({
             </div>
           )}
           <DialogFooter className="mt-4">
-            <Button type="button" variant="ghost" onClick={closeDialog} disabled={isLoading} className="text-text-secondary hover:text-text-primary">
+            <Button type="button" variant="ghost" onClick={closeDialog} disabled={isLoading} className="text-text-secondary hover:text-text-primary hover:bg-subtle/50">
               Cancel
             </Button>
-            <Button type="button" variant="destructive" className="bg-state-error text-text-primary hover:bg-state-error/90" onClick={() => handleSubmit()} disabled={isLoading}>
+            <Button type="button" className="bg-state-error text-white hover:bg-state-error/90 font-semibold rounded-xl disabled:bg-subtle disabled:text-text-muted disabled:opacity-50" onClick={() => handleSubmit()} disabled={isLoading}>
               {isLoading ? "Deleting..." : "Delete Project"}
             </Button>
           </DialogFooter>

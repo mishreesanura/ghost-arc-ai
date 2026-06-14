@@ -122,4 +122,21 @@
     html {
         @apply font-sans;
     }
+    
+    /* Custom scrollbars matching dark technical workspace */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--bg-base);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: var(--border-subtle);
+        border-radius: 9999px;
+        border: 2px solid var(--bg-base);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-primary);
+    }
 }

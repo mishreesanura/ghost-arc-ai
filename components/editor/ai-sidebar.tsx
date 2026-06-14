@@ -480,16 +480,16 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
         className="flex flex-1 flex-col overflow-hidden"
       >
         <div className="px-6 py-3 border-b border-border-default shrink-0">
-          <TabsList className="grid grid-cols-2 w-full bg-subtle p-1 rounded-xl">
+          <TabsList className="grid grid-cols-2 w-full bg-subtle p-1 rounded-xl h-10">
             <TabsTrigger
               value="architect"
-              className="rounded-lg py-1.5 text-xs transition-colors data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-text-muted"
+              className="rounded-lg text-xs transition-colors data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-text-muted"
             >
               AI Architect
             </TabsTrigger>
             <TabsTrigger
               value="specs"
-              className="rounded-lg py-1.5 text-xs transition-colors data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-text-muted"
+              className="rounded-lg text-xs transition-colors data-[state=active]:bg-accent data-[state=active]:text-accent-foreground text-text-muted"
             >
               Specs
             </TabsTrigger>
@@ -499,7 +499,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
         {/* AI Architect Tab Content */}
         <TabsContent value="architect" className="flex flex-1 flex-col overflow-hidden m-0 p-0">
           {/* Scrollable Chat Area */}
-          <ScrollArea ref={scrollAreaRef} className="flex-1 px-6 py-4">
+          <div ref={scrollAreaRef} className="flex-1 px-6 py-4 overflow-y-auto pr-2">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center text-center py-8 px-2 space-y-5">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-ai/10 text-accent-ai border border-accent-ai/20 shadow-[0_0_20px_rgba(100,87,249,0.15)] animate-pulse">
@@ -537,24 +537,23 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
                     key={msg.id}
                     className={`flex flex-col max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed border ${
                       msg.sender === "user"
-                        ? "self-end text-black border-transparent"
+                        ? "self-end bg-state-success text-black border-transparent"
                         : "self-start bg-elevated border-border-default text-accent-ai-text"
                     }`}
-                    style={msg.sender === "user" ? { backgroundColor: "#62C073" } : undefined}
                   >
                     <span className="font-sans whitespace-pre-wrap">{msg.text}</span>
                   </div>
                 ))}
               </div>
             )}
-          </ScrollArea>
+          </div>
 
           {/* AI Thinking/Status Indicator Panel */}
           {(isAiThinking || !!runId) && (
             <div className="px-6 py-2 bg-elevated border-t border-border-default flex items-center justify-between gap-2.5 shrink-0 animate-pulse">
               <div className="flex items-center gap-2.5 min-w-0">
-                <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" style={{ color: "#62C073" }} />
-                <span className="text-[11px] font-medium truncate" style={{ color: "#62C073" }}>
+                <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-state-success" />
+                <span className="text-[11px] font-medium truncate text-state-success">
                   {latestStatusMessage || "GhostArc AI is analyzing your design..."}
                 </span>
               </div>
@@ -585,8 +584,11 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
                 size="icon"
                 onClick={handleSend}
                 disabled={!inputValue.trim() || isAiThinking || !!runId}
-                className="h-8 w-8 rounded-lg shrink-0 text-black hover:opacity-90 transition-all disabled:opacity-40 disabled:bg-subtle disabled:text-text-muted"
-                style={(!inputValue.trim() || isAiThinking || !!runId) ? undefined : { backgroundColor: "#62C073" }}
+                className={`h-8 w-8 rounded-lg shrink-0 text-black hover:opacity-90 transition-all disabled:opacity-40 disabled:bg-subtle disabled:text-text-muted ${
+                  !inputValue.trim() || isAiThinking || !!runId
+                    ? ""
+                    : "bg-state-success hover:bg-state-success/90"
+                }`}
               >
                 {isAiThinking || !!runId ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -599,7 +601,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
         </TabsContent>
 
         {/* Specs Tab Content */}
-        <TabsContent value="specs" className="flex flex-1 flex-col p-6 space-y-4 overflow-y-auto m-0">
+        <TabsContent value="specs" className="flex flex-1 flex-col p-6 space-y-4 overflow-hidden m-0">
           <Button
             onClick={handleGenerateSpec}
             disabled={!!specRunId || isAiThinking}
@@ -647,7 +649,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
                 </div>
               </div>
             ) : (
-              <ScrollArea className="flex-1 -mx-1 px-1">
+              <div className="flex-1 -mx-1 px-1 overflow-y-auto pr-2">
                 <div className="space-y-2.5 pb-4">
                   {specs.map((spec) => {
                     const cleanFilename = `spec-${roomId.slice(0, 8)}-${spec.id.slice(0, 8)}.md`;
@@ -655,20 +657,20 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
                       <div
                         key={spec.id}
                         onClick={() => handlePreviewSpec(spec)}
-                        className="flex items-start gap-3.5 p-4 rounded-2xl bg-elevated border border-border-default hover:border-border-subtle transition-all cursor-pointer group"
+                        className="flex items-start gap-3.5 p-4 rounded-2xl bg-elevated border border-border-default hover:border-accent-primary/30 hover:bg-subtle/40 transition-all cursor-pointer group shadow-sm hover:shadow-[0_0_12px_rgba(0,200,212,0.08)]"
                       >
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent-foreground border border-accent/20 group-hover:bg-accent/15 transition-colors">
                           <FileText className="h-5 w-5" />
                         </div>
                         <div className="flex-1 min-w-0 space-y-1">
-                          <h4 className="text-xs font-semibold text-text-primary truncate group-hover:text-accent transition-colors">
+                          <h4 className="text-xs font-semibold text-text-primary truncate group-hover:text-accent-primary transition-colors">
                             {cleanFilename}
                           </h4>
-                          <p className="text-[10px] text-text-muted leading-normal font-mono">
+                          <p className="text-[10px] text-text-muted leading-normal font-mono group-hover:text-text-secondary transition-colors">
                             {new Date(spec.createdAt).toLocaleString()}
                           </p>
                           <div className="flex items-center justify-between pt-1">
-                            <span className="text-[9px] text-text-faint font-mono">v1.0.0 • Generated</span>
+                            <span className="text-[9px] text-text-faint font-mono group-hover:text-text-muted transition-colors">v1.0.0 • Generated</span>
                             <Button
                               variant="ghost"
                               size="icon"
@@ -684,7 +686,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
                     );
                   })}
                 </div>
-              </ScrollArea>
+              </div>
             )}
           </div>
         </TabsContent>
@@ -692,7 +694,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
 
       {/* Specification Preview Modal */}
       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-        <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col bg-surface border-border-default text-text-primary rounded-2xl overflow-hidden p-6 shadow-2xl">
+        <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col bg-surface border-border-default text-text-primary rounded-3xl overflow-hidden p-6 shadow-2xl">
           <DialogHeader className="flex flex-row items-center justify-between border-b border-border-default pb-4 shrink-0">
             <div className="space-y-1 min-w-0">
               <DialogTitle className="text-sm font-semibold flex items-center gap-2 truncate text-text-primary">
@@ -716,7 +718,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
             )}
           </DialogHeader>
           
-          <ScrollArea className="flex-grow overflow-y-auto mt-4 pr-1">
+          <div className="flex-grow overflow-y-auto mt-4 pr-3">
             {previewLoading ? (
               <div className="flex flex-col items-center justify-center py-24 gap-3 text-text-muted">
                 <Loader2 className="h-6 w-6 animate-spin text-accent" />
@@ -727,7 +729,7 @@ export function AiSidebar({ isOpen, onClose, roomId, nodes, edges }: AiSidebarPr
                 <MarkdownRenderer content={previewContent} />
               </div>
             )}
-          </ScrollArea>
+          </div>
         </DialogContent>
       </Dialog>
     </aside>

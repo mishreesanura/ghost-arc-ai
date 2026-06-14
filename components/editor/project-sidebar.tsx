@@ -64,26 +64,26 @@ export function ProjectSidebar({
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="text-text-secondary hover:text-text-primary hover:bg-subtle/50 h-8 w-8 rounded-lg"
+            className="text-text-secondary hover:text-text-primary hover:bg-subtle/50 h-9 w-9 rounded-lg"
             aria-label="Close sidebar"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </Button>
         </div>
 
         {/* Content Area with Tabs */}
         <div className="flex-1 overflow-y-auto p-6">
           <Tabs defaultValue="my-projects" className="w-full h-full flex flex-col gap-4">
-            <TabsList className="grid w-full grid-cols-2 bg-base border border-default p-1 rounded-xl">
+            <TabsList className="grid w-full grid-cols-2 bg-base border border-default p-1 rounded-xl h-10">
               <TabsTrigger
                 value="my-projects"
-                className="rounded-lg text-xs py-2 data-[state=active]:bg-subtle data-[state=active]:text-accent-primary"
+                className="rounded-lg text-xs data-[state=active]:bg-subtle data-[state=active]:text-accent-primary"
               >
                 My Projects
               </TabsTrigger>
               <TabsTrigger
                 value="shared"
-                className="rounded-lg text-xs py-2 data-[state=active]:bg-subtle data-[state=active]:text-accent-primary"
+                className="rounded-lg text-xs data-[state=active]:bg-subtle data-[state=active]:text-accent-primary"
               >
                 Shared
               </TabsTrigger>
@@ -118,30 +118,41 @@ export function ProjectSidebar({
                         onClick={() => handleProjectClick(project.id)}
                         className="flex-1 flex items-center gap-3 overflow-hidden"
                       >
-                        <Folder className="h-4 w-4 text-accent-primary shrink-0" />
+                        <Folder className={`h-4 w-4 shrink-0 transition-colors ${isActive ? "text-accent-primary" : "text-text-muted"}`} />
                         <div className="truncate">
                           <div className={`text-sm truncate ${isActive ? "text-accent-primary font-semibold" : "text-text-primary font-medium"}`}>
                             {project.name}
                           </div>
                         </div>
                       </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity text-text-muted hover:text-text-primary hover:bg-base">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48 bg-surface border-default text-text-primary">
-                          <DropdownMenuItem onClick={() => onRenameProject(project)} className="cursor-pointer hover:bg-subtle focus:bg-subtle">
-                            <Pencil className="mr-2 h-4 w-4 text-text-muted" />
-                            <span>Rename</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => onDeleteProject(project)} className="cursor-pointer text-state-error hover:bg-state-error/10 hover:text-state-error focus:bg-state-error/10 focus:text-state-error">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            <span>Delete</span>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity shrink-0">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onRenameProject(project);
+                          }}
+                          className="h-8 w-8 text-text-muted hover:text-text-primary hover:bg-base rounded-lg"
+                          title="Rename Project"
+                          aria-label={`Rename ${project.name}`}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onDeleteProject(project);
+                          }}
+                          className="h-8 w-8 text-text-muted hover:text-state-error hover:bg-state-error/10 rounded-lg"
+                          title="Delete Project"
+                          aria-label={`Delete ${project.name}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   );
                 })
@@ -177,7 +188,7 @@ export function ProjectSidebar({
                         onClick={() => handleProjectClick(project.id)}
                         className="flex-1 flex items-center gap-3 overflow-hidden"
                       >
-                        <Users className="h-4 w-4 text-accent-ai shrink-0" />
+                        <Users className={`h-4 w-4 shrink-0 transition-colors ${isActive ? "text-accent-ai" : "text-text-muted"}`} />
                         <div className="truncate">
                           <div className={`text-sm truncate ${isActive ? "text-accent-ai font-semibold" : "text-text-primary font-medium"}`}>
                             {project.name}
@@ -195,7 +206,7 @@ export function ProjectSidebar({
 
         {/* Footer with New Project Button */}
         <div className="border-t border-default p-6">
-          <Button onClick={onNewProject} className="w-full bg-accent-primary text-bg-base hover:bg-accent-primary/90 font-medium py-5 gap-2 rounded-xl">
+          <Button onClick={onNewProject} className="w-full bg-accent-primary text-black hover:bg-accent-primary/95 font-semibold h-11 gap-2 rounded-xl border-none">
             <Plus className="h-4 w-4" />
             New Project
           </Button>

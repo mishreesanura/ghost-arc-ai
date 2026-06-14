@@ -70,16 +70,23 @@ export function EditorHomeClient({
 
       {/* Main Area */}
       <main className="flex-1 flex items-center justify-center p-8 md:p-12 w-full">
-        <div className="flex flex-col items-center justify-center text-center space-y-6 max-w-md">
-          <div className="space-y-2">
-            <h1 className="text-2xl font-bold tracking-tight text-text-primary">Create a project or open an existing one</h1>
-            <p className="text-text-muted text-sm">
-              Start a new architecture workspace, or choose a project from the sidebar.
+        <div className="flex flex-col items-center justify-center text-center space-y-6 max-w-md bg-surface/50 border border-default p-8 rounded-3xl backdrop-blur-md shadow-2xl relative overflow-hidden group">
+          {/* Subtle top glow line */}
+          <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-accent-primary/50 to-transparent" />
+          
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-primary/10 text-accent-primary border border-accent-primary/20 shadow-[0_0_20px_rgba(0,200,212,0.15)] mb-2">
+            <Plus className="h-6 w-6" strokeWidth={1.5} />
+          </div>
+
+          <div className="space-y-2.5">
+            <h1 className="text-xl font-bold tracking-tight text-text-primary">Create a project or open an existing one</h1>
+            <p className="text-text-muted text-xs leading-relaxed max-w-[280px] mx-auto">
+              Start a new architecture workspace, or choose a project from the sidebar to begin designing.
             </p>
           </div>
           <Button 
             onClick={() => openDialog("create")} 
-            className="bg-accent-primary text-bg-base hover:bg-accent-primary/90 gap-2 font-medium"
+            className="bg-accent-primary text-black hover:bg-accent-primary/95 font-semibold h-11 px-6 gap-2 rounded-xl border-none shadow-[0_4px_12px_rgba(0,200,212,0.2)] transition-all duration-200"
           >
             <Plus className="h-4 w-4" />
             New Project

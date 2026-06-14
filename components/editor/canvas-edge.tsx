@@ -94,7 +94,7 @@ export function CanvasEdgeComponent({
   };
 
   const isHighlighted = isHovered || selected || isEditing;
-  const strokeColor = isHighlighted ? "var(--color-accent-primary)" : "#6b7280";
+  const strokeColor = isHighlighted ? "var(--color-accent-primary)" : "var(--color-text-muted)";
   const opacity = isHighlighted ? "1" : "0.45";
 
   return (
